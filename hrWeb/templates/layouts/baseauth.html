@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+<title>login</title>
+<!----===== Bootstrap ===== -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<!----===== Iconscout CSS ===== -->
+<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+<!----CSS Files----->
+<link href="{% static 'assets/css/auth.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="forms">
+        {% block content %}
+
+        {% endblock content %}
+    </div>
+</div>
+<!-- JavaScript pour faire disparaître les alertes après 5 secondes -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const alertElements = document.querySelectorAll('.alert');
+        alertElements.forEach(function(alert) {
+            setTimeout(function() {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 500); // Correspond à la durée de la transition
+            }, 5000); // 5000 ms = 5 secondes
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Convertir la date au format YYYY-MM-DD avant l'envoi du formulaire
+        $('#dateForm').submit(function(e) {
+            var dateInput = $('#dateInput').val();
+            // Utilisez 'DD-MM-YYYY' pour le format d'entrée et 'YYYY-MM-DD' pour le format de sortie
+            var formattedDate = moment(dateInput, 'DD-MM-YYYY').format('YYYY-MM-DD');
+            $('#dateInput').val(formattedDate);
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+{% extends 'layouts/basedashboardadmin.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-inner slimscroll">
+            <div id="sidebar-menu" class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Rôle et département</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <ul>
+                                <li><a href="{% url 'liste_role' %}">Liste Rôles</a></li>
+                                <li><a href="{% url 'liste_departements' %}">Liste Départements</a></li>
+                            </ul>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);" class="active"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Utilisateurs</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'liste_admin' %}">Liste Administrateur</a></li>
+                            <li><a href="{% url 'liste_salarie' %}">Liste Salariés</a></li>
+                            <li><a href="{% url 'liste_partenaire' %}">Liste Partenaires</a></li>
+                            <li><a href="{% url 'liste_client' %}">Liste Client</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Contrats</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'creer_contrat' %}">Créer</a></li>
+                            <li><a href="{% url 'liste_contrat' %}">Liste</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/expense1.svg' %}" alt="img"><span> Fiche de paie</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'liste_fichePaie' %}">Liste</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Rapport</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="#">Demande Partenaires</a></li>
+                            <li><a href="#">Feedback</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Paramètres</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'configurer_email' %}">Email</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endblock sidebar %}
+<!-- sidebar -->
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Ajouter un Administrateur</h2> 
+            </div>
+        </div>
+        <form action="{% url 'creer_admin' %}" method="POST">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Veuillez saisir l'email">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="adresse">Adresse</label>
+                                <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Veuillez saisir l'adresse" >
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="telephone">Téléphone</label>
+                                <input type="text" class="form-control" id="telephone" name="telephone" placeholder="Veuillez saisir le numéro de téléphone">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="sexe">Sexe</label>
+                                <select class="select" id="sexe" name="sexe" required>
+                                    <option value="">Choix...</option>
+                                    <option value="H">Homme</option>
+                                    <option value="F">Femme</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="role">Rôle</label>
+                                <select class="select" id="role-fields" name="role" required>
+                                    <option value="">Aucun</option>
+                                    {% for role in roles %}
+                                    <option value="{{ role.id }}">{{ role.nom_role }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="nom_admin">Nom</label>
+                                <input type="text" class="form-control" id="nom_admin" name="nom_admin" placeholder="Veuillez saisir le nom" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="prenom_admin">Prénom</label>
+                                <input type="text" class="form-control" id="prenom_admin" name="prenom_admin" placeholder="Veuillez saisir le prénom" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a href="{% url 'liste_admin' %}" class="btn btn-cancel">Annuler</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- MAIN -->
+{% endblock content %}

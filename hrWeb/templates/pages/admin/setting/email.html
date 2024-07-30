@@ -1,0 +1,141 @@
+{% extends 'layouts/basedashboardadmin.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-inner slimscroll">
+            <div id="sidebar-menu" class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="#"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Rôle et département</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'liste_role' %}">Liste Rôles</a></li>
+                            <li><a href="{% url 'creer_departement' %}">Créer un département</a></li>
+                            <li><a href="{% url 'liste_departements' %}">Liste Départements</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Utilisateurs</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'liste_admin' %}">Liste Administrateur</a></li>
+                            <li><a href="{% url 'liste_salarie' %}">Liste Salariés</a></li>
+                            <li><a href="{% url 'liste_partenaire' %}">Liste Partenaires</a></li>
+                            <li><a href="{% url 'liste_client' %}">Liste Client</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Contrats</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'creer_contrat' %}">Créer</a></li>
+                            <li><a href="{% url 'liste_contrat' %}">Liste</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/expense1.svg' %}" alt="img"><span> Fiche de paie</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="#">Ajouter</a></li>
+                            <li><a href="#">Liste</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Rapport</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="#">Demande Partenaires</a></li>
+                            <li><a href="#">Feedback</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Paramètres</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'configurer_email' %}" class="active">Email</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endblock sidebar %}
+<!-- sidebar -->
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Paramètres de l'email</h2> 
+                <h4>Gérer les paramètres de l'email</h4>
+            </div>
+        </div>
+        <form action="{% url 'configurer_email' %}" method="POST">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="host">Serveur de courriel:</label>
+                                <input type="text" id="host" name="host" value="{{ email_settings.host }}">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="port">Port:</label>
+                                <input type="text" id="port" name="port" value="{{ email_settings.port }}">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="host_user">Compte email:</label>
+                                <input type="text" id="host_user" name="host_user" value="{{ email_settings.host_user }}">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="host_password">Mot de passe du compte email:</label>
+                                <input type="password" id="host_password" name="host_password" value="{{ email_settings.host_password }}">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="use_tls">Utiliser le TLS:</label>
+                                <select class="select" id="use_tls" name="use_tls">
+                                    <option value="">Selectionner...</option>
+                                    <option value="true" {% if email_settings.use_tls %}selected{% endif %}>Oui</option>
+                                    <option value="false" {% if not email_settings.use_tls %}selected{% endif %}>Non</option>
+                                </select>
+                            </div> 
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="use_ssl">Utiliser le SSL:</label>
+                                <select class="select" id="use_ssl" name="use_ssl">
+                                    <option value="">Selectionner...</option>
+                                    <option value="true" {% if email_settings.use_ssl %}selected{% endif %}>Oui</option>
+                                    <option value="false" {% if not email_settings.use_ssl %}selected{% endif %}>Non</option>
+                                </select>
+                            </div> 
+                        </div>
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- MAIN -->
+{% endblock content %}

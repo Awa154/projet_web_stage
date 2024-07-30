@@ -1,0 +1,420 @@
+{% extends 'layouts/basedashboardadmin.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-inner slimscroll">
+            <div id="sidebar-menu" class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Rôle et département</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'liste_role' %}">Liste Rôles</a></li>
+                            <li><a href="{% url 'liste_departements' %}">Liste Départements</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Utilisateurs</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'liste_admin' %}">Liste Administrateur</a></li>
+                            <li><a href="{% url 'liste_salarie' %}" class="active" >Liste Salariés</a></li>
+                            <li><a href="{% url 'liste_partenaire' %}">Liste Partenaires</a></li>
+                            <li><a href="{% url 'liste_client' %}">Liste Client</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Contrats</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'creer_contrat' %}">Créer</a></li>
+                            <li><a href="{% url 'liste_contrat' %}">Liste</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/expense1.svg' %}" alt="img"><span> Fiche de paie</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'liste_fichePaie' %}">Liste</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Rapport</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="#">Demande Partenaires</a></li>
+                            <li><a href="#">Feedback</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Paramètres</span> <span class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'configurer_email' %}">Email</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endblock sidebar %}
+<!-- sidebar -->
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="page-header">
+            <div class="page-title">
+                <h3>Liste des Salariés</h3>
+                <h4>Gérer les salariés</h4>
+            </div>
+            <div class="page-btn">
+                <a href="{% url 'creer_salarie' %}" class="btn btn-added"><img src="{% static 'assets/img/icons/plus.svg' %}" alt="img">Ajouter</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="{% static 'assets/img/icons/filter.svg' %}" alt="img">
+                                <span><img src="{% static 'assets/img/icons/closes.svg' %}" alt="img"></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="{% static 'assets/img/icons/search-white.svg' %}" alt="img"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table  datanew">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Âge</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                                <th>Adresse</th>
+                                <th>Compétences</th>
+                                <th>Statut</th>
+                                <th>Action</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for salarie in salaries %}
+                            <tr>
+                                <td>{{ salarie.nom_salarie }}</td>
+                                <td>{{ salarie.prenom_salarie }}</td>
+                                <td>{{ salarie.age }}</td>
+                                <td>{{ salarie.compte.email }}</td>
+                                <td>{{ salarie.compte.telephone }}</td>
+                                <td>{{ salarie.compte.adresse }}</td>
+                                <td>
+                                    {% for competence in salarie.competence_set.all %}
+                                    {{ competence.competence }}{% if not forloop.last %}, {% endif %}
+                                    <br>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'statut' salarie.compte.id %}">
+                                        {% if salarie.compte.is_active %}
+                                            <span class="bg-lightgreen badges">Activer</span>
+                                        {% else %}
+                                            <span class="bg-lightred badges">Bloquer</span>
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="me-3" href="#" data-toggle="modal" data-target="#modifierInfo{{ salarie.id }}"">
+                                        <img src="{% static 'assets/img/icons/edit.svg' %}" alt="img">
+                                    </a>
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="modifierInfo{{ salarie.id }}">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                                            <div class="modal-content">
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                <h3 class="modal-title">Modifier les informations de {{ salarie.nom_salarie }} {{ salarie.prenom_salarie }}</h3>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <form id="dateForm" action="{% url 'modifier_salarie' salarie.id %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col-lg-12">
+                                                                        <h3>Informations personnels</h3> 
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="nom_salarie">Nom</label>
+                                                                            <input type="text" class="form-control" id="nom_salarie" name="nom_salarie" value="{{ salarie.nom_salarie }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="prenom_salarie">Prénom</label>
+                                                                            <input type="text" class="form-control" id="prenom_salarie" name="prenom_salarie" value="{{ salarie.prenom_salarie }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <h4>Informations professionnels</h4> 
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="role">Rôle dans le système</label>
+                                                                            <select class="select" id="role-fields" name="role" required>
+                                                                                <option value="{{ salarie.compte.role.id }}" selected>{{ salarie.compte.role.nom_role }}</option>
+                                                                                {% for role in roles %}
+                                                                                    <option value="{{ role.id }}">{{ role.nom_role }}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="departement">Département/ Section</label>
+                                                                            <select class="select" id="departement" name="departement">
+                                                                                <option value="{{ salarie.departement.id }}" selected>{{ salarie.departement.nom_dep }}</option>
+                                                                                <option value="">Aucun</option>
+                                                                                {% for departement in departements %}
+                                                                                    <option value="{{ departement.id }}">{{ departement.nom_dep }}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="competences">Compétences</label>
+                                                                            <div id="competences-container">
+                                                                                {% for competence in salarie.competence_set.all %}
+                                                                                    <a class="d-flex align-items-center mb-2" href="javascript:void(0);">
+                                                                                        <input type="text" class="form-control mb-2" name="competences" value="{{ competence.competence }}" title="competence">
+                                                                                        <img src="{% static 'assets/img/icons/delete.svg' %}" alt="img">
+                                                                                    </a>
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                            <button type="button" id="add-competence" class="btn btn-primary">Ajouter une compétence</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="annee_exp">Années d'expérience possédé</label>
+                                                                            <input type="number" class="form-control" id="annee_exp" name="annee_exp" value="{{ salarie.annee_exp }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Options
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#affecterEntreprise{{ salarie.id }}">Affecter à entreprise</a>
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editerFichePaie{{ salarie.id }}">Editer fiche de paie</a>
+                                            <a class="dropdown-item" href="{% url 'contrats_en_cours' salarie.id %}">Contrats en cours</a>
+                                            <a class="dropdown-item" href="{% url 'contrats_termines' salarie.id %}">Contrats terminés</a>
+                                        </div>
+                                    </div>
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="affecterEntreprise{{ salarie.id }}">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                                            <div class="modal-content">
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                <h3 class="modal-title">Affecter une entreprise à {{ salarie.nom_salarie }} {{ salarie.prenom_salarie }}</h3>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <form id="dateForm" action="{% url 'editer_fiche_paie' salarie.id %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col-lg-12">
+                                                                        <h4>Informations professionnels</h4> 
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="type_contrat">Type de contrat</label>
+                                                                            <input type="text" class="form-control" id="type_contrat" name="type_contrat" placeholder="Veuillez saisir le type du contrat" required>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="entreprise">Entreprise</label>
+                                                                            <select class="select" id="entreprise" name="entreprise" required>
+                                                                                <option value="">Selectionner...</option>
+                                                                                {% for entreprise in entreprises %}
+                                                                                    <option value="{{ entreprise.id }}">{{ entreprise.nom_entreprise }}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="dateDebutInput">Date début</label>
+                                                                            <div class="input-groupicon" id="datetimepicker">
+                                                                                <input type="text" class="datetimepicker" id="dateDebutInput" name="date_debut" placeholder="JJ-MM-AAAA" required">
+                                                                                <div class="addonset">
+                                                                                    <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="dateFinInput">Date fin</label>
+                                                                            <div class="input-groupicon" id="datetimepicker">
+                                                                                <input type="text" class="datetimepicker" id="dateFinInput" name="date_fin" placeholder="JJ-MM-AAAA" required>
+                                                                                <div class="addonset">
+                                                                                    <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-group">
+                                                                            <label for="type_contrat">Fonction à occuper</label>
+                                                                            <input type="text" class="form-control" id="fonction_salarie" name="fonction_salarie" placeholder="Veuillez saisir le type du contrat" required>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-group">
+                                                                            <label for="clauses">Clause</label>
+                                                                            <div id="clauses-container">
+                                                                                <input type="text" class="form-control mb-2" name="clauses" placeholder="Veuillez saisir les clauses du contrat" title="Clause">
+                                                                            </div>
+                                                                            <button type="button" id="add-clause" class="btn btn-primary">Ajouter une clause</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <h4>Informations sur la paie</h4> 
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-group">
+                                                                            <label for="mode_paiement">Payement par</label>
+                                                                            <select class="select" id="mode_paiement" name="mode_paiement" required>
+                                                                                <option value="">Selectionner...</option>
+                                                                                <option value="H">Heure</option>
+                                                                                <option value="J">Jour</option>
+                                                                                <option value="M">Mois</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <h5>Par heure</h5> 
+                                                                    </div>
+                                                                    <!-- Par heure -->  
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="heures_travail">Nombre d'heure de travail</label>
+                                                                            <input type="number" class="form-control" id="heures_travail" name="heures_travail" placeholder="Nombre d'heure par jour">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="taux_horaire">Taux horaire</label>
+                                                                            <input type="floatformat" class="form-control" id="taux_horaire" name="taux_horaire" placeholder="Montant payer par heure">
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- Par jour -->  
+                                                                    <div class="col-lg-12">
+                                                                        <h5>Par jour</h5> 
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="jours_travail">Nombre de jour de travail</label>
+                                                                            <input type="number" class="form-control" id="jours_travail" name="jours_travail" placeholder="Nombre de jour par semaine">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="taux_journalier">Taux journalier</label>
+                                                                            <input type="floatformat" class="form-control" id="taux_journalier" name="taux_journalier" placeholder="Montant payer par jour">
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- Par mois -->
+                                                                    <div class="col-lg-12">
+                                                                        <h5>Par Mois</h5> 
+                                                                    </div>  
+                                                                    <div class="col-sm-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="salaire_mensuel">Salaire de base</label>
+                                                                            <input type="floatformat" class="form-control" id="salaire_mensuel" name="salaire_mensuel" placeholder="Montant payer par mois">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <button type="submit" class="btn btn-primary me-2">Affecter</button>
+                                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Non</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="editerFichePaie{{ salarie.id }}">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" >
+                                            <div class="modal-content">
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                <h3 class="modal-title">Editer une fiche de paie à {{ salarie.nom_salarie }} {{ salarie.prenom_salarie }}</h3>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <form id="dateForm" action="{% url 'affecter_salarie' salarie.id %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MAIN -->
+{% endblock content %}

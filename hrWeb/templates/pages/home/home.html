@@ -1,0 +1,274 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <title>login</title>
+    <!----CSS Files----->
+    <link href="{% static 'assets/css/home.css' %}" rel="stylesheet">
+    <!-- Box Icon Link for Icons -->
+    <link
+    href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    rel="stylesheet"
+    />
+</head>
+<body>
+    <!-- Header & Navbar Section -->
+    <header>
+    <nav>
+        <div class="nav_logo">
+        <a href="#">
+            <img src="{% static 'assets/image/logo.png' %}">
+            <h2>HrBridge</h2>
+        </a>
+        </div>
+
+        <input type="checkbox" id="click" />
+        <label for="click">
+        <i class="menu_btn bx bx-menu"></i>
+        <i class="close_btn bx bx-x"></i>
+        </label>
+
+        <ul>
+        <li><a href="#home">Accuiel</a></li>
+        <li><a href="#service">Services</a></li>
+        <li><a href="#about">A propos</a></li>
+        <li><a href="{% url 'connexion' %}">Se connecter</a></li>
+        </ul>
+    </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero_section">
+    <div class="section_container">
+        <div class="hero_container">
+        <div class="text_section">
+            <h2>Bienvenue sur HrBridge</h2>
+            <h3>Un pont entre vos employé, vos entreprises partenaires et vous</h3>
+            <p>
+            Simplifiez et automatisez vos tâches administratives
+            </p>
+
+            <div class="hero_section_button">
+            <button class="button">Services</button>
+            <button class="button">Contactez-nous</button>
+            </div>
+        </div>
+
+        <div class="image_section">
+            <img src="{% static 'assets/image/logo.png' %}">
+        </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about_us" id="about">
+    <div class="section_container">
+        <div class="about_container">
+        <div class="text_section">
+            <h2 class="section_title">A propos de nous</h2>
+            <p>
+            Notre plateforme de gestion des ressources humaines
+                offre une solution complète pour les entreprises et
+                leurs partenaires, permettant une administration 
+                efficace et structurée des employés, des départements 
+                et des contrats de travail
+            </p>
+        </div>
+
+        <div class="image_section">
+            <img src="{% static 'assets/image/logo.png' %}">
+        </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="service">
+    <h2 class="section_title">Nos services</h2>
+    <div class="section_container">
+        <div class="service_container">
+            <div class="services_items">
+                <img src="{% static 'assets/image/salarie.png' %}">
+                <div class="services_text">
+                <h3>Gestion de salariés et entreprise partenaires</h3>
+                <p>
+                    Créez des comptes pour vos employés et partenaires rapidement.
+                </p>
+                </div>
+            </div>
+            <div class="services_items">
+                <img src="{% static 'assets/image/contract.png' %}">
+                <div class="services_text">
+                <h3>Gestion des contrats</h3>
+                <p>
+                    Suivez les contrats et les paiements facilement
+                </p>
+                </div>
+            </div>
+            <div class="services_items">
+                <img src="{% static 'assets/image/customer-service.png' %}">
+                <div class="services_text">
+                <h3>Main d'oeuvre</h3>
+                <p>Besoin de main d'oeuvre? Nous avons ce qu'il vous faut.</p>
+                </div>
+            </div>
+            <div class="services_items">
+                <img src="{% static 'assets/image/job-search.png' %}">
+                <div class="services_text">
+                <h3>Embauche</h3>
+                <p>Vous êtes à la recherche d'un emploi? Contactez-nous!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- Why Us Section -->
+    <section class="why_us" id="why">
+    <h2 class="section_title">Pourquoi nous?</h2>
+    <div class="section_container">
+        <div class="why_container">
+        <div class="why_items">
+            <img src="{% static 'assets/image/recruitment.png' %}">
+            <div class="why_us_text">
+            <h3>Salariés qualifiés</h3>
+            <p>
+                Nous avons des salariés exerçant dans de nombreux domaines différents et avec des compétences multiples
+            </p>
+            </div>
+        </div>
+        <div class="why_items">
+            <img src="{% static 'assets/image/selection.png' %}">
+            <div class="why_us_text">
+            <h3>Interfaces intuitive</h3>
+            <p>
+                Notre plateforme a été conçue pour être intuitive et facile d'utilisation
+            </p>
+            </div>
+        </div>
+        <div class="why_items">
+            <img src="{% static 'assets/image/help-desk.png' %}">
+            <div class="why_us_text">
+            <h3>Communication fluidifié</h3>
+            <p>
+                Nous sommes à votre écoute à tout moment
+            </p>
+            </div>
+        </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+    <h2 class="section_title">Contactez-nous</h2>
+    <div class="section_container">
+        <div class="contact_container">
+        <div class="contact_form">
+            <form action="#">
+            <div class="field">
+                <label for="Name">Nom complet</label>
+                <input type="text" id="Name" placeholder="Renseignez votre nom complet" required />
+            </div>
+            <div class="field">
+                <label for="email">Email</label>
+                <input
+                type="text"
+                id="email"
+                placeholder="Votre email"
+                required
+                />
+            </div>
+            <div class="field">
+                <label for="number">Contact</label>
+                <input
+                type="number"
+                id="number"
+                placeholder="Renseignez votre numéros de téléphone"
+                required
+                />
+            </div>
+            <div class="field">
+                <label for="textarea">Message</label>
+                <textarea
+                name="textarea"
+                id="textarea"
+                placeholder="Votre message"
+                ></textarea>
+            </div>
+
+            <button class="button" id="submit">Envoyer</button>
+            </form>
+        </div>
+
+        <div class="contact_text">
+            <div class="contact_items">
+            <i class="bx bx-current-location"></i>
+            <div class="contact_details">
+                <h3>Notre localisation</h3>
+                <p>Lomé, TOGO</p>
+            </div>
+            </div>
+            <div class="contact_items">
+            <i class="bx bxs-envelope"></i>
+            <div class="contact_details">
+                <h3>Adresse mail</h3>
+                <p>hrbridge@gmail.com</p>
+            </div>
+            </div>
+            <div class="contact_items">
+            <i class="bx bxs-phone-call"></i>
+            <div class="contact_details">
+                <h3>Appelez nous</h3>
+                <p>+01 92728239</p>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+    <div class="section_container">
+        <div class="footer_section">
+        <div class="footer_logo">
+            <a href="#">
+                <img src="{% static 'assets/image/logo.png' %}">
+            <h2>Coffee</h2>
+            </a>
+        </div>
+
+        <div class="useful_links">
+            <h3>Lien utiles</h3>
+            <ul>
+            <li><a href="#about">A propos</a></li>
+            <li><a href="#service">Services</a></li>
+            <li><a href="#why">Pourquoi-nous?</a></li>
+            <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+
+        <div class="contact_us">
+            <h3>Contact</h3>
+            <ul>
+            <li>
+                <i class="bx bx-current-location"></i>
+                <span>Lomé, TOGO</span>
+            </li>
+            <li>
+                <i class="bx bxs-phone-call"></i> <span>+01 92728239</span>
+            </li>
+            </ul>
+        </div>
+        </div>
+    </div>
+    </footer>
+</body>
+</html>
