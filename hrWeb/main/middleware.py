@@ -32,7 +32,6 @@ class ProtectUrlsMiddleware:
             reverse('home_salarie'): ['SA'],
             reverse('home_entreprise'): ['EN'],
             reverse('home_client'): ['CL'],
-            reverse('liste_salarie'): ['AD'],
         }
 
         user_id = request.session.get('user_id')

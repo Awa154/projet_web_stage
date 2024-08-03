@@ -143,7 +143,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 # Durée de la session en secondes (par exemple, 3600 secondes pour 1 heure)
-SESSION_COOKIE_AGE = 3600
+SESSION_COOKIE_AGE = 86400
 # Pour fermer automatiquement la session à la fermeture du navigateur
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 

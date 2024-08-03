@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const newCompetenceField = document.createElement('div');
         newCompetenceField.className = 'form-group';
         newCompetenceField.innerHTML = `
-            <input type="text" class="form-control mb-2" name="competences" placeholder="Compétence" title="Compétence" required>
+            <input type="text" class="form-control mb-2" name="competences" value="{{ competences }}" placeholder="Compétence" title="Compétence" required>
             <button type="button" class="btn btn-danger remove-competence">Supprimer</button>
         `;
             competencesContainer.appendChild(newCompetenceField);

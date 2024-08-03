@@ -3,59 +3,54 @@
 {% load static %}
 {% block sidebar %}
 <!--sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-inner slimscroll">
-            <div id="sidebar-menu" class="sidebar-menu">
-                <ul>
-                    <li>
-                        <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Rôle et département</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="{% url 'liste_role' %}">Liste Rôles</a></li>
-                            <li><a href="{% url 'liste_departements' %}">Liste Départements</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Utilisateurs</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="{% url 'liste_admin' %}">Liste Administrateur</a></li>
-                            <li><a href="{% url 'liste_salarie' %}">Liste Salariés</a></li>
-                            <li><a href="{% url 'liste_partenaire' %}" class="active" >Liste Partenaires</a></li>
-                            <li><a href="{% url 'liste_client' %}">Liste Client</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Contrats</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="{% url 'creer_contrat' %}">Créer</a></li>
-                            <li><a href="{% url 'liste_contrat' %}">Liste</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/expense1.svg' %}" alt="img"><span> Fiche de paie</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="{% url 'liste_fichePaie' %}">Liste</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Rapport</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="#">Demande Partenaires</a></li>
-                            <li><a href="#">Feedback</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Paramètres</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="{% url 'configurer_email' %}">Email</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Administration</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_admin' %}">Super Administrateurs</a></li>
+                        <li><a href="{% url 'liste_role' %}">Rôles</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{% url 'liste_departements' %}"><i data-feather="box"></i><span>Départements</span><span class="menu-arrow"></span></a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span>Comptes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_salarie' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_partenaire' %}" class="active">Partenaires</a></li>
+                        <li><a href="{% url 'liste_client' %}">Client</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{% url 'liste_contrat' %}"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                </li>
+                <li>
+                    <a href="{% url 'liste_fichePaie' %}"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiche de paie</span> <span class="menu-arrow"></span></a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Rapport</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="#">Demande Partenaires</a></li>
+                        <li><a href="#">Feedback</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Paramètres</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'configurer_email' %}">Email</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </div>
+</div>
     {% endblock sidebar %}
 <!-- sidebar -->
 <!-- MAIN -->
@@ -71,6 +66,12 @@
             {% endfor %}
         </div>
         {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'liste_partenaire' %}">Liste des partenaires</a></li>
+            </ol>
+        </nav>
+        <br>
         <div class="page-header">
             <div class="page-title">
                 <h3>Liste des Partenaires</h3>
@@ -160,57 +161,67 @@
                                                                     <div class="col-lg-12">
                                                                         <h4>Informations professionnels</h4> 
                                                                     </div>
-                                                                    <div class="col-sm-6 col-12">
+                                                                    <div class="col-lg-12">
                                                                         <div class="form-group">
                                                                             <label for="type_contrat">Type de contrat</label>
-                                                                            <input type="text" class="form-control" id="type_contrat" name="type_contrat" placeholder="Veuillez saisir le type du contrat" required>
+                                                                            <input type="text" class="form-control" id="type_contrat" name="type_contrat" value="{{ type_contrat }}" placeholder="Veuillez saisir le type du contrat" required>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-sm-6 col-12">
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-group">
+                                                                            <label for="dateDebutInput">Date début</label>
+                                                                            <div class="input-groupicon" id="datetimepicker">
+                                                                                <input type="text" class="datetimepicker" id="dateDebutInput" name="date_debut" value="{{ date_debut }}" placeholder="JJ-MM-AAAA" required">
+                                                                                <div class="addonset">
+                                                                                    <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
+                                                                                </div>
+                                                                            </div>
+                                                                            {% if errors.date_debut %}
+                                                                                <div class="text-danger">{{ errors.date_debut }}</div>
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-group">
+                                                                            <label for="dateFinInput">Date fin</label>
+                                                                            <div class="input-groupicon" id="datetimepicker">
+                                                                                <input type="text" class="datetimepicker" id="dateFinInput" name="date_fin" value="{{ date_fin }}" placeholder="JJ-MM-AAAA" required>
+                                                                                <div class="addonset">
+                                                                                    <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
+                                                                                </div>
+                                                                            </div>
+                                                                            {% if errors.date_fin %}
+                                                                                <div class="text-danger">{{ errors.date_fin }}</div>
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <h5>Sélectionner une entreprise ou client</h5> 
+                                                                    </div>
+                                                                    <div class="col-lg-12">
                                                                         <div class="form-group">
                                                                             <label for="salarie">Salarié</label>
-                                                                            <select class="select" id="salarie" name="salarie" required>
-                                                                                <option value="">Selectionner...</option>
+                                                                            <select class="select" id="salarie" name="salarie">
+                                                                                <option value="">Sélectionner...</option>
                                                                                 {% for salarie in salaries %}
-                                                                                    <option value="{{ salarie.id }}">{{ salarie.nom_salarie }} {{ salarie.prenom_salarie }}</option>
+                                                                                    <option value="{{ salarie.id }}" {% if salaire.id|stringformat:"s" == salarie_id|stringformat:"s" %}selected{% endif %}>
+                                                                                        {{ salarie.nom_salarie }} {{ salarie.prenom_salarie }}
+                                                                                    </option>
                                                                                 {% endfor %}
                                                                             </select>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-sm-6 col-12">
                                                                         <div class="form-group">
-                                                                            <label for="dateDebutInput">Date début</label>
-                                                                            <div class="input-groupicon" id="datetimepicker">
-                                                                                <input type="text" class="datetimepicker" id="dateDebutInput" name="date_debut" placeholder="JJ-MM-AAAA" required">
-                                                                                <div class="addonset">
-                                                                                    <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
-                                                                                </div>
-                                                                            </div>
+                                                                            <label for="fonction_salarie">Fonction du salarié</label>
+                                                                            <input type="text" class="form-control" id="fonction_salarie" name="fonction_salarie" value="{{ fonction_salarie }}" placeholder="Veuillez saisir le type du contrat" onkeypress="validateInput(event)" required>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-sm-6 col-12">
                                                                         <div class="form-group">
-                                                                            <label for="dateFinInput">Date fin</label>
-                                                                            <div class="input-groupicon" id="datetimepicker">
-                                                                                <input type="text" class="datetimepicker" id="dateFinInput" name="date_fin" placeholder="JJ-MM-AAAA" required>
-                                                                                <div class="addonset">
-                                                                                    <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    
-                                                                    <div class="col-lg-12">
-                                                                        <div class="form-group">
-                                                                            <label for="type_contrat">Fonction à occuper</label>
-                                                                            <input type="text" class="form-control" id="fonction_salarie" name="fonction_salarie" placeholder="Veuillez saisir le type du contrat" required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-12">
-                                                                        <div class="form-group">
                                                                             <label for="clauses">Clause</label>
                                                                             <div id="clauses-container">
-                                                                                <input type="text" class="form-control mb-2" name="clauses" placeholder="Veuillez saisir les clauses du contrat" title="Clause">
+                                                                                <input type="text" class="form-control mb-2" name="clauses" placeholder="Veuillez saisir les clauses du contrat" value="{{ clauses }}" title="Clause">
                                                                             </div>
                                                                             <button type="button" id="add-clause" class="btn btn-primary">Ajouter une clause</button>
                                                                         </div>
@@ -218,14 +229,14 @@
                                                                     <div class="col-lg-12">
                                                                         <h4>Informations sur la paie</h4> 
                                                                     </div>
-                                                                    <div class="col-lg-12">
+                                                                    <div class="col-sm-6 col-12">
                                                                         <div class="form-group">
                                                                             <label for="mode_paiement">Payement par</label>
                                                                             <select class="select" id="mode_paiement" name="mode_paiement" required>
                                                                                 <option value="">Selectionner...</option>
-                                                                                <option value="H">Heure</option>
-                                                                                <option value="J">Jour</option>
-                                                                                <option value="M">Mois</option>
+                                                                                <option value="H" {% if mode_paiement == 'H' %}selected{% endif %}>Heure</option>
+                                                                                <option value="J" {% if mode_paiement == 'J' %}selected{% endif %}>Jour</option>
+                                                                                <option value="M" {% if mode_paiement == 'M' %}selected{% endif %}>Mois</option>
                                                                             </select>
                                                                         </div>
                                                                     </div>
@@ -236,13 +247,19 @@
                                                                     <div class="col-sm-6 col-12">
                                                                         <div class="form-group">
                                                                             <label for="heures_travail">Nombre d'heure de travail</label>
-                                                                            <input type="number" class="form-control" id="heures_travail" name="heures_travail" placeholder="Nombre d'heure par jour">
+                                                                            <input type="number" class="form-control" id="heures_travail" name="heures_travail" value="{{ heures_travail }}" placeholder="Nombre d'heure par jour">
+                                                                            {% if errors.heures_travail %}
+                                                                                <div class="text-danger">{{ errors.heures_travail }}</div>
+                                                                            {% endif %}
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-sm-6 col-12">
                                                                         <div class="form-group">
                                                                             <label for="taux_horaire">Taux horaire</label>
-                                                                            <input type="number" class="form-control" id="taux_horaire" name="taux_horaire" placeholder="Montant payer par heure">
+                                                                            <input type="floatformat" class="form-control" id="taux_horaire" name="taux_horaire" value="{{ taux_horaire }}" placeholder="Montant payer par heure">
+                                                                            {% if errors.taux_horaire %}
+                                                                                <div class="text-danger">{{ errors.taux_horaire }}</div>
+                                                                            {% endif %}
                                                                         </div>
                                                                     </div>
                                                                     <!-- Par jour -->  
@@ -252,13 +269,19 @@
                                                                     <div class="col-sm-6 col-12">
                                                                         <div class="form-group">
                                                                             <label for="jours_travail">Nombre de jour de travail</label>
-                                                                            <input type="number" class="form-control" id="jours_travail" name="jours_travail" placeholder="Nombre de jour par semaine">
+                                                                            <input type="number" class="form-control" id="jours_travail" name="jours_travail" value="{{ jours_travail }}" placeholder="Nombre de jour par semaine">
+                                                                            {% if errors.jours_travail %}
+                                                                                <div class="text-danger">{{ errors.jours_travail }}</div>
+                                                                            {% endif %}
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-sm-6 col-12">
                                                                         <div class="form-group">
                                                                             <label for="taux_horaire">Taux journalier</label>
-                                                                            <input type="number" class="form-control" id="taux_horaire" name="taux_horaire" placeholder="Montant payer par jour">
+                                                                            <input type="floatformat" class="form-control" id="taux_journalier" name="taux_journalier" value="{{ taux_journalier }}" placeholder="Montant payer par jour">
+                                                                            {% if errors.taux_journalier %}
+                                                                                <div class="text-danger">{{ errors.taux_journalier }}</div>
+                                                                            {% endif %}
                                                                         </div>
                                                                     </div>
                                                                     <!-- Par mois -->
@@ -268,12 +291,15 @@
                                                                     <div class="col-sm-6 col-12">
                                                                         <div class="form-group">
                                                                             <label for="salaire_mensuel">Salaire de base</label>
-                                                                            <input type="number" class="form-control" id="salaire_mensuel" name="salaire_mensuel" placeholder="Montant payer par mois">
+                                                                            <input type="floatformat" class="form-control" id="salaire_mensuel" name="salaire_mensuel" value="{{ salaire_mensuel }}" placeholder="Montant payer par mois">
+                                                                            {% if errors.salaire_mensuel %}
+                                                                                <div class="text-danger">{{ errors.salaire_mensuel }}</div>
+                                                                            {% endif %}
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-12">
-                                                                        <button type="submit" class="btn btn-primary me-2">Affecter</button>
-                                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Non</button>
+                                                                        <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                                                                        <a href="{% url 'liste_contrat' %}" class="btn btn-cancel">Annuler</a>
                                                                     </div>
                                                                 </div>
                                                             </div>

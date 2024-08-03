@@ -11,17 +11,21 @@
                         <a href="#"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
                     </li>
                     <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Rôle et département</span> <span class="menu-arrow"></span></a>
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Administration</span> <span class="menu-arrow"></span></a>
                         <ul>
+                            <li><a href="{% url 'liste_admin' %}">Super Administrateurs</a></li>
                             <li><a href="{% url 'liste_role' %}">Liste Rôles</a></li>
-                            <li><a href="{% url 'creer_departement' %}">Créer un département</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span>Départements</span> <span class="menu-arrow"></span></a>
+                        <ul>
                             <li><a href="{% url 'liste_departements' %}">Liste Départements</a></li>
                         </ul>
                     </li>
                     <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Utilisateurs</span> <span class="menu-arrow"></span></a>
+                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span>Comptes</span> <span class="menu-arrow"></span></a>
                         <ul>
-                            <li><a href="{% url 'liste_admin' %}">Liste Administrateur</a></li>
                             <li><a href="{% url 'liste_salarie' %}">Liste Salariés</a></li>
                             <li><a href="{% url 'liste_partenaire' %}">Liste Partenaires</a></li>
                             <li><a href="{% url 'liste_client' %}">Liste Client</a></li>
@@ -76,65 +80,107 @@
         <div class="page-header">
             <div class="page-title">
                 <h2>Paramètres de l'email</h2> 
-                <h4>Gérer les paramètres de l'email</h4>
             </div>
         </div>
-        <form action="{% url 'configurer_email' %}" method="POST">
-            {% csrf_token %}
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="host">Serveur de courriel:</label>
-                                <input type="text" id="host" name="host" value="{{ email_settings.host }}">
+        <div class="card bg-white">
+            <div class="card-header">
+                <h3 class="card-title">Options</h3>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="nav-item"><a class="nav-link active" href="#basic-justified-tab1" data-bs-toggle="tab">Renseignement</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#basic-justified-tab2" data-bs-toggle="tab">Configuration</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane show active" id="basic-justified-tab1">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <h4>Etapes à suivre pour la configuration de l'email</h4>
+                                        <h5>Cas du protocole SMTP</h5>
+                                        <p>Configuration de base:</p>
+                                        <p>
+                                            Serveur de courriel: smpt.gmail.com
+                                        </p>
+                                        <p>
+                                            Port: 587
+                                        </p>
+                                        <p>
+                                            Au choix :
+                                        </p>
+                                        <p>
+                                            Utiliser le TLS: OUI
+                                        </p>
+                                        <p>
+                                            Utiliser le SSL: NON
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="port">Port:</label>
-                                <input type="text" id="port" name="port" value="{{ email_settings.port }}">
+                    </div>
+                    <div class="tab-pane" id="basic-justified-tab2">
+                        <form action="{% url 'configurer_email' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="host">Serveur de courriel:</label>
+                                                <input type="text" id="host" name="host" value="{{ email_settings.host }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="port">Port:</label>
+                                                <input type="text" id="port" name="port" value="{{ email_settings.port }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="host_user">Compte email:</label>
+                                                <input type="text" id="host_user" name="host_user" value="{{ email_settings.host_user }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="host_password">Mot de passe du compte email:</label>
+                                                <input type="password" id="host_password" name="host_password" value="{{ email_settings.host_password }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="use_tls">Utiliser le TLS:</label>
+                                                <select class="select" id="use_tls" name="use_tls">
+                                                    <option value="">Selectionner...</option>
+                                                    <option value="true" {% if email_settings.use_tls %}selected{% endif %}>Oui</option>
+                                                    <option value="false" {% if not email_settings.use_tls %}selected{% endif %}>Non</option>
+                                                </select>
+                                            </div> 
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="use_ssl">Utiliser le SSL:</label>
+                                                <select class="select" id="use_ssl" name="use_ssl">
+                                                    <option value="">Selectionner...</option>
+                                                    <option value="true" {% if email_settings.use_ssl %}selected{% endif %}>Oui</option>
+                                                    <option value="false" {% if not email_settings.use_ssl %}selected{% endif %}>Non</option>
+                                                </select>
+                                            </div> 
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="host_user">Compte email:</label>
-                                <input type="text" id="host_user" name="host_user" value="{{ email_settings.host_user }}">
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="host_password">Mot de passe du compte email:</label>
-                                <input type="password" id="host_password" name="host_password" value="{{ email_settings.host_password }}">
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="use_tls">Utiliser le TLS:</label>
-                                <select class="select" id="use_tls" name="use_tls">
-                                    <option value="">Selectionner...</option>
-                                    <option value="true" {% if email_settings.use_tls %}selected{% endif %}>Oui</option>
-                                    <option value="false" {% if not email_settings.use_tls %}selected{% endif %}>Non</option>
-                                </select>
-                            </div> 
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="use_ssl">Utiliser le SSL:</label>
-                                <select class="select" id="use_ssl" name="use_ssl">
-                                    <option value="">Selectionner...</option>
-                                    <option value="true" {% if email_settings.use_ssl %}selected{% endif %}>Oui</option>
-                                    <option value="false" {% if not email_settings.use_ssl %}selected{% endif %}>Non</option>
-                                </select>
-                            </div> 
-                        </div>
-                        <div class="col-lg-12">
-                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 <!-- MAIN -->

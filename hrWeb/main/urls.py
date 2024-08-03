@@ -32,10 +32,12 @@ urlpatterns = [
     
     #Route vers les vue de la gestion des rôles et départements par l'admin
     path('creer_departement', creer_departement, name="creer_departement"),
-    path('creer_role', creer_role, name="creer_role"),
     path('modifier_departement/<int:departement_id>/',modifier_departement, name='modifier_departement'),
-    path('modifier_role/<int:role_id>/',modifier_role, name='modifier_role'),
+    path('supprimer_departement/<int:departement_id>/',supprimer_departement, name='supprimer_departement'),
     path('liste_departements', liste_departements, name="liste_departements"),
+    path('creer_role', creer_role, name="creer_role"),
+    path('modifier_role/<int:role_id>/',modifier_role, name='modifier_role'),
+    path('supprimer_role/<int:role_id>/',supprimer_role, name='supprimer_role'),
     path('liste_role', liste_role, name="liste_role"), 
     
     #Route vers les vue de la gestion des salariés par l'admin
@@ -62,6 +64,7 @@ urlpatterns = [
     path('statutContrat/<int:contrat_id>/', statutContrat, name='statutContrat'),
     path('modifier_contrat/<int:contrat_id>/',modifier_contrat, name='modifier_contrat'),
     path('liste_contrat', liste_contrat, name="liste_contrat"),
+    path('detail_contrat/<int:contrat_id>/', detail_contrat, name="detail_contrat"),
     path('contrats_en_cours/<int:salarie_id>/', contrats_en_cours, name="contrats_en_cours"),
     path('contrats_termines/<int:salarie_id>/', contrats_termines, name="contrats_termines"),
     path('envoyer_contract_pdf/<int:contrat_id>/', envoyer_contract_pdf, name='envoyer_contract_pdf'),

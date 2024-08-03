@@ -1,24 +1,20 @@
 from datetime import date, datetime
+import re
 from django.db import models
 from django.dispatch import receiver
+from django.forms import ValidationError
 from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models.signals import post_save
-
-class Departement(models.Model):
-    nom_dep = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.nom_dep
     
 class Role(models.Model):
     ACCE_PAGE = (
+        ('GE', 'Gestionnaire'),
         ('AD', 'Page administrateur'),
         ('SA', 'Page salarié'),
         ('EN', 'Page des partenaires'),
         ('CL', 'Page des clients'),
     )
-    nom_role = models.CharField(max_length=50)
-    niv_permission=models.IntegerField()
+    nom_role = models.CharField(max_length=50, unique=True)
     acce_page=models.CharField(max_length=60,choices=ACCE_PAGE, null=True, blank=True)
 
 
@@ -51,6 +47,10 @@ class Admin(models.Model):
     compte = models.OneToOneField(Compte, on_delete=models.CASCADE)
     nom_admin = models.CharField(max_length=100)
     prenom_admin = models.CharField(max_length=150)
+    fonction_admin= models.CharField(max_length=150, default="Aucun")
+
+    def __str__(self):
+        return f"{self.nom_admin} {self.prenom_admin}"
 
 class Entreprise(models.Model):
     compte = models.OneToOneField(Compte, on_delete=models.CASCADE)
@@ -60,6 +60,7 @@ class Entreprise(models.Model):
     poste_agent= models.CharField(max_length=200, default="Agent")
     secteurActivite = models.CharField(max_length=100)
     site_web = models.URLField(max_length=255, blank=True)
+    creer_par = models.ForeignKey(Compte, on_delete=models.SET_NULL, null=True, related_name='creer_partenaire')
     
 class Client(models.Model):
     compte = models.OneToOneField(Compte, on_delete=models.CASCADE, null=True, blank=True)
@@ -67,7 +68,14 @@ class Client(models.Model):
     nom_client = models.CharField(max_length=100)
     prenom_client = models.CharField(max_length=200)
     poste_occupe = models.CharField(max_length=100)
-    
+    creer_par = models.ForeignKey(Compte, on_delete=models.SET_NULL, null=True, related_name='creer_client')
+
+class Departement(models.Model):
+    nom_dep = models.CharField(max_length=100, unique=True)
+    creer_par = models.ForeignKey(Compte, on_delete=models.SET_NULL, null=True, related_name='creer_departement')
+
+    def __str__(self):
+        return self.nom_dep 
 class Salarie(models.Model):
     compte = models.OneToOneField(Compte, on_delete=models.CASCADE)
     nom_salarie = models.CharField(max_length=100)
@@ -75,6 +83,7 @@ class Salarie(models.Model):
     dateNaissance = models.DateField(null=True, blank=True)
     annee_exp = models.PositiveIntegerField(null=True)
     departement = models.ForeignKey(Departement, on_delete=models.SET_NULL, null=True, blank=True)
+    creer_par = models.ForeignKey(Compte, on_delete=models.SET_NULL, null=True, related_name='creer_salarie')
     
     @property
     def age(self):
@@ -105,24 +114,32 @@ class Contrat(models.Model):
     salarie = models.ForeignKey(Salarie, on_delete=models.CASCADE)
     entreprise = models.ForeignKey(Entreprise, on_delete=models.CASCADE, null=True, blank=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, blank=True)
-    
-    def save(self, *args, **kwargs):
-        # Ensure date_fin is a date object
-        if isinstance(self.date_fin, str):
-            self.date_fin = datetime.strptime(self.date_fin, '%Y-%m-%d').date()
+    creer_par = models.ForeignKey(Compte, on_delete=models.SET_NULL, null=True, related_name='creer_contrat')
 
+    def save(self, *args, **kwargs):
         if self.date_fin < date.today():
             self.est_terminer = True
+        super().save(*args, **kwargs)
+        self.check_contract_status()
+
+    def check_contract_status(self):
+        if self.date_fin < date.today():
+            self.est_terminer = True
+            self.save(update_fields=['est_terminer'])
+
+        active_contracts = Contrat.objects.filter(
+            salarie=self.salarie,
+            est_terminer=False,
+            date_fin__gte=date.today()
+        ).count()
+
+        if active_contracts == 0:
             self.salarie.compte.is_active = False
             self.salarie.compte.save()
-        super().save(*args, **kwargs)
 
-@receiver(post_save, sender= Contrat)
-def desactiver_compte_salarie(sender, instance, **kwargs):
-    if instance.est_terminer:
-        salarie = instance.salarie
-        salarie.compte.is_active = False
-        salarie.compte.save()
+@receiver(post_save, sender=Contrat)
+def update_contract_status(sender, instance, **kwargs):
+    instance.check_contract_status()
     
 class Clause(models.Model):
     contrat = models.ForeignKey(Contrat, on_delete=models.CASCADE)
@@ -145,7 +162,7 @@ class FicheDePaie(models.Model):
     total_retenue= models.FloatField(null=True, blank=True)
     salaire_net = models.FloatField(null=True, blank=True)
     est_payer = models.BooleanField(default=False) 
-    
+    creer_par = models.ForeignKey(Compte, on_delete=models.SET_NULL, null=True, related_name='creer_paie')
     
 #Méthode pour calculer le salaire en fonction du mode payement d'un employé
 def calculer_montant_final(self):
@@ -159,15 +176,6 @@ def calculer_montant_final(self):
     elif contrat.mode_paiement == 'M':
         return contrat.salaire_mensuel
     return 0
-
-class Rapport(models.Model):
-    datePaiement = models.DateField()
-    echeance = models.DateField()
-    detail= models.TextField()
-    montant = models.FloatField()
-    statut = models.CharField(max_length=10, default='Impayer')
-    salarie = models.ForeignKey(Salarie, on_delete=models.CASCADE)
-    entreprise = models.ForeignKey(Entreprise, on_delete=models.CASCADE)
 
 class DemandeEmploye(models.Model):
     STATUT_CHOICES = (

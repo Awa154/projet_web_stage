@@ -3,61 +3,54 @@
 {% load static %}
 {% block sidebar %}
 <!--sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-inner slimscroll">
-            <div id="sidebar-menu" class="sidebar-menu">
-                <ul>
-                    <li>
-                        <a href="#"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Rôle et département</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="{% url 'liste_role' %}">Liste Rôles</a></li>
-                            <li><a href="{% url 'liste_departements' %}">Liste Départements</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);" class="active"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Utilisateurs</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <ul>
-                                <li><a href="{% url 'liste_admin' %}">Liste Administrateur</a></li>
-                                <li><a href="{% url 'liste_salarie' %}">Liste Salariés</a></li>
-                                <li><a href="{% url 'liste_partenaire' %}">Liste Partenaires</a></li>
-                                <li><a href="{% url 'liste_client' %}">Liste Client</a></li>
-                            </ul>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Contrats</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="{% url 'creer_contrat' %}">Créer</a></li>
-                            <li><a href="{% url 'liste_contrat' %}">Liste</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/expense1.svg' %}" alt="img"><span> Fiche de paie</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="{% url 'liste_fichePaie' %}">Liste</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Rapport</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="#">Demande Partenaires</a></li>
-                            <li><a href="#">Feedback</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Paramètres</span> <span class="menu-arrow"></span></a>
-                        <ul>
-                            <li><a href="{% url 'configurer_email' %}">Email</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Administration</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_admin' %}">Super Administrateurs</a></li>
+                        <li><a href="{% url 'liste_role' %}">Rôles</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{% url 'liste_departements' %}"><i data-feather="box"></i><span>Départements</span><span class="menu-arrow"></span></a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span>Comptes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_salarie' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_partenaire' %}" class="active">Partenaires</a></li>
+                        <li><a href="{% url 'liste_client' %}">Client</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{% url 'liste_contrat' %}"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                </li>
+                <li>
+                    <a href="{% url 'liste_fichePaie' %}"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiche de paie</span> <span class="menu-arrow"></span></a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Rapport</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="#">Demande Partenaires</a></li>
+                        <li><a href="#">Feedback</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Paramètres</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'configurer_email' %}">Email</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </div>
+</div>
     {% endblock sidebar %}
 <!-- sidebar -->
 <!-- MAIN -->
@@ -73,6 +66,13 @@
             {% endfor %}
         </div>
         {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'liste_partenaire' %}">Liste des partenaires</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'creer_partenaire' %}">Ajouter un partenaire</a></li>
+            </ol>
+        </nav>
+        <br>
         <div class="page-header">
             <div class="page-title">
                 <h2>Ajouter un partenaire</h2> 
@@ -88,55 +88,58 @@
                         </div>
                         <div class="col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Veuillez saisir l'email">
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="adresse">Adresse</label>
-                                <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Veuillez saisir l'adresse" >
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="telephone">Téléphone</label>
-                                <input type="text" class="form-control" id="telephone" name="telephone" placeholder="Veuillez saisir le numéro de téléphone">
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-12">
-                            <div class="form-group">
                                 <label for="role">Rôle dans le système</label>
                                 <select class="select" id="role-fields" name="role" required>
                                     <option value="">Aucun</option>
                                     {% for role in roles %}
-                                    <option value="{{ role.id }}">{{ role.nom_role }}</option>
+                                        <option value="{{ role.id }}" {% if role.id|stringformat:"s" == role_id|stringformat:"s" %}selected{% endif %}>{{ role.nom_role }}</option>
                                     {% endfor %}
                                 </select>
+                                {% if errors.role %}
+                                    <div class="text-danger">{{ errors.role }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="nom_entreprise">Nom de l'entreprise</label>
-                                <input type="text" class="form-control" id="nom_entreprise" name="nom_entreprise" placeholder="Veuillez saisir le nom de l'entreprise">
+                                <input type="text" class="form-control" id="nom_entreprise" name="nom_entreprise" placeholder="Veuillez saisir le nom de l'entreprise" value="{{ nom_entreprise }}">
+                                {% if errors.nom_entreprise %}
+                                    <div class="text-danger">{{ nom_entreprise }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="nom_agent_entreprise">Nom agent de l'entreprise</label>
-                                <input type="text" class="form-control" id="nom_agent_entreprise" name="nom_agent_entreprise" placeholder="Veuillez saisir le nom du représentant de l'entreprise">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Veuillez saisir l'email" value="{{ email }}">
+                                {% if errors.email %}
+                                    <div class="text-danger">{{ errors.email }}</div>
+                                {% endif %}
                             </div>
                         </div>
-                        <div class="col-sm-6 col-12">
+                        <div class="col-lg-3 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="prenom_agent_entreprise">Prénom agent de l'entreprise</label>
-                                <input type="text" class="form-control" id="prenom_agent_entreprise" name="prenom_agent_entreprise" placeholder="Veuillez saisir le prenom de l'agent de l'entreprise">
+                                <label for="adresse">Adresse</label>
+                                <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Veuillez saisir l'adresse" value="{{ adresse }}">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="telephone">Téléphone</label>
+                                <input type="text" class="form-control" id="telephone" name="telephone" placeholder="Veuillez saisir le numéro de téléphone" value="{{ telephone }}">
+                                {% if errors.telephone %}
+                                    <div class="text-danger">{{ errors.telephone }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="poste_agent">Poste occupé par l'agent</label>
-                                <input type="text" class="form-control" id="poste_agent" name="poste_agent" placeholder="Veuillez saisir le poste occupé par l'agent de l'entreprise">
+                                <input type="text" class="form-control" id="poste_agent" name="poste_agent" value="{{ poste_agent }}" placeholder="Veuillez saisir le poste occupé par l'agent de l'entreprise">
+                                {% if errors.poste_agent %}
+                                    <div class="text-danger">{{ errors.poste_agent }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-lg-3 col-sm-6 col-12">
@@ -149,6 +152,27 @@
                             <div class="form-group">
                                 <label for="secteur_activite">Secteur d'activité</label>
                                 <input type="text" class="form-control" id="secteur_activite" name="secteur_activite" placeholder="Veuillez saisir le secteur d'activité de l'entreprise de l'entreprise">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <h4>Informations personnels de l'agent</h4> 
+                        </div>
+                        <div class="col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="nom_agent_entreprise">Nom agent de l'entreprise</label>
+                                <input type="text" class="form-control" id="nom_agent_entreprise" name="nom_agent_entreprise" value="{{ nom_agent_entreprise }}" placeholder="Veuillez saisir le nom du représentant de l'entreprise">
+                                {% if errors.nom_agent_entreprise %}
+                                    <div class="text-danger">{{ errors.nom_agent_entreprise }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="prenom_agent_entreprise">Prénom agent de l'entreprise</label>
+                                <input type="text" class="form-control" id="prenom_agent_entreprise" name="prenom_agent_entreprise" value="{{ prenom_agent_entreprise }}" placeholder="Veuillez saisir le prenom de l'agent de l'entreprise">
+                                {% if errors.prenom_agent_entreprise %}
+                                    <div class="text-danger">{{ errors.prenom_agent_entreprise }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-lg-12">
