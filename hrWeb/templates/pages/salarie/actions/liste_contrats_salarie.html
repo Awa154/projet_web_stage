@@ -1,0 +1,267 @@
+{% extends 'layouts/basedashboardsalarie.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li >
+                    <a href="{% url 'home_salarie' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_contrats_salarie' %}" class="active">En cours et Terminer</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fiches_de_paie_salarie' %}">Payées et Impayées</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock sidebar %}
+<!-- sidebar -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card bg-white">
+                    <div class="card-header">
+                        <h5 class="card-title">Liste des contrats</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified">
+                            <li class="nav-item"><a class="nav-link active" href="#solid-rounded-justified-tab1" data-bs-toggle="tab">Avec Entreprise</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#solid-rounded-justified-tab2" data-bs-toggle="tab">Avec CLients</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#solid-rounded-justified-tab3" data-bs-toggle="tab">Avec Partenaires</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane show active" id="solid-rounded-justified-tab1">
+                                <div class="card-body">
+                                    <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified">
+                                        <li class="nav-item"><a class="nav-link active" href="#solid-rounded-justified-tab1-1" data-bs-toggle="tab">En cours</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#solid-rounded-justified-tab1-2" data-bs-toggle="tab">Terminer</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane show active" id="solid-rounded-justified-tab1-1">
+                                            <table class="table  datanew">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Avec l'entreprise</th>
+                                                        <th>Section</th>
+                                                        <th>Type de contrat </th>
+                                                        <th>Date de début</th>
+                                                        <th>Date de fin</th>
+                                                        <th>Travail comme</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for contrat in contrats_en_cours %}
+                                                        {% if not contrat.affectation_set.exists %}
+                                                            <tr>
+                                                                <td>{{ contrat.contratsalarie.entreprise.nom_entreprise }}</td>
+                                                                <td>{{ contrat.contratsalarie.departement.nom_dep if contrat.contratsalarie.departement }}</td>
+                                                                <td>{{ contrat.type_contrat }}</td>
+                                                                <td>{{ contrat.date_debut }}</td>
+                                                                <td>{{ contrat.date_fin }}</td>
+                                                                <td>{{ contrat.fonction_salarie }}</td>
+                                                            </tr>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane" id="solid-rounded-justified-tab1-2">
+                                            <table class="table  datanew">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Avec l'entreprise</th>
+                                                        <th>Section</th>
+                                                        <th>Type de contrat </th>
+                                                        <th>Date de début</th>
+                                                        <th>Date de fin</th>
+                                                        <th>Travail comme</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for contrat_ter in contrats_terminer %}
+                                                        {% if not contrat_ter.affectation_set.exists %}
+                                                            <tr>
+                                                                <td>{{ contrat_ter.contratsalarie.entreprise.nom_entreprise }}</td>
+                                                                <td>{{ contrat_ter.contratsalarie.departement.nom_dep if contrat_ter.contratsalarie.departement }}</td>
+                                                                <td>{{ contrat_ter.type_contrat }}</td>
+                                                                <td>{{ contrat_ter.date_debut }}</td>
+                                                                <td>{{ contrat_ter.date_fin }}</td>
+                                                                <td>{{ contrat_ter.fonction_salarie }}</td>
+                                                            </tr>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="solid-rounded-justified-tab2">
+                                <div class="card-body">
+                                    <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified">
+                                        <li class="nav-item"><a class="nav-link active" href="#solid-rounded-justified-tab2-1" data-bs-toggle="tab">En cours</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#solid-rounded-justified-tab2-2" data-bs-toggle="tab">Terminer</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane show active" id="solid-rounded-justified-tab2-1">
+                                            <table class="table  datanew">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Avec le client</th>
+                                                        <th>Type de contrat </th>
+                                                        <th>Date de début</th>
+                                                        <th>Date de fin</th>
+                                                        <th>Travail comme</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for contrat in contrats_en_cours %}
+                                                        {% for affectation in contrat.affectation_set.all %}
+                                                            {% if affectation.client %}
+                                                            <tr>
+                                                                <td>{{ affectation.client.nom_client }} {{ affectation.client.prenom_client }}</td>
+                                                                <td>{{ contrat.type_contrat }}</td>
+                                                                <td>{{ contrat.date_debut }}</td>
+                                                                <td>{{ contrat.date_fin }}</td>
+                                                                <td>{{ contrat.fonction_salarie }}</td>
+                                                            </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane" id="solid-rounded-justified-tab2-2">
+                                            <table class="table  datanew">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Avec le client</th>
+                                                        <th>Type de contrat </th>
+                                                        <th>Date de début</th>
+                                                        <th>Date de fin</th>
+                                                        <th>Travail comme</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for contrat_ter in contrats_terminer %}
+                                                        {% for affectation in contrat_ter.affectation_set.all %}
+                                                            {% if affectation.client %}
+                                                            <tr>
+                                                                <td>{{ affectation.client.nom_client }} {{ affectation.client.prenom_client }}</td>
+                                                                <td>{{ contrat_ter.type_contrat }}</td>
+                                                                <td>{{ contrat_ter.date_debut }}</td>
+                                                                <td>{{ contrat_ter.date_fin }}</td>
+                                                                <td>{{ contrat_ter.fonction_salarie }}</td>
+                                                            </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="solid-rounded-justified-tab3">
+                                <div class="card-body">
+                                    <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified">
+                                        <li class="nav-item"><a class="nav-link active" href="#solid-rounded-justified-tab3-1" data-bs-toggle="tab">En cours</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#solid-rounded-justified-tab3-2" data-bs-toggle="tab">Terminer</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane show active" id="solid-rounded-justified-tab3-1">
+                                            <table class="table  datanew">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Avec l'entreprise'</th>
+                                                        <th>Type de contrat </th>
+                                                        <th>Date de début</th>
+                                                        <th>Date de fin</th>
+                                                        <th>Travail comme</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for contrat in contrats_en_cours %}
+                                                        {% for affectation in contrat.affectation_set.all %}
+                                                            {% if affectation.entreprise_partenaire %}
+                                                            <tr>
+                                                                <td>{{ affectation.entreprise_partenaire.entreprise.nom_entreprise }}</td>
+                                                                <td>{{ contrat.type_contrat }}</td>
+                                                                <td>{{ contrat.date_debut }}</td>
+                                                                <td>{{ contrat.date_fin }}</td>
+                                                                <td>{{ contrat.fonction_salarie }}</td>
+                                                            </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane" id="solid-rounded-justified-tab3-2">
+                                            <table class="table  datanew">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Avec l'entreprise'</th>
+                                                        <th>Type de contrat </th>
+                                                        <th>Date de début</th>
+                                                        <th>Date de fin</th>
+                                                        <th>Travail comme</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for contrat_ter in contrats_terminer %}
+                                                        {% for affectation in contrat_ter.affectation_set.all %}
+                                                            {% if affectation.entreprise_partenaire %}
+                                                            <tr>
+                                                                <td>{{ affectation.entreprise_partenaire.entreprise.nom_entreprise }}</td>
+                                                                <td>{{ contrat_ter.type_contrat }}</td>
+                                                                <td>{{ contrat_ter.date_debut }}</td>
+                                                                <td>{{ contrat_ter.date_fin }}</td>
+                                                                <td>{{ contrat_ter.fonction_salarie }}</td>
+                                                            </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>	
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,318 @@
+{% extends 'layouts/basedashboardadmin.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li>
+                    <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Administrations</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Managements</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_roles' %}">Rôles</a></li>
+                        <li><a href="{% url 'liste_admins' %}">Administrateurs</a></li>
+                        <li><a href="{% url 'liste_entreprises' %}">Entreprises</a></li>
+                        <li><a href="{% url 'liste_contrats_affectations' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Gestions</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span>Comptes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_salaries' %}" class="active">Salariés</a></li>
+                        <li><a href="{% url 'liste_partenaires' %}">Partenaires</a></li>
+                        <li><a href="{% url 'liste_clients' %}">Clients</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li>
+                    <a href="{% url 'liste_doc_contrats' %}"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fichesPaie' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_fichesPaie_affectation' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_demandes' %}">Partenaires et clients</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Paramètres</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Configuration</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'configurer_email' %}">Email</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+    {% endblock sidebar %}
+<!-- sidebar -->
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'liste_salaries' %}">Liste des salariés</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'modifier_contrat_salarie' contrat_id=contrat.id salarie_id=salarie.id %}">Modifier contrat </a></li>
+            </ol>
+        </nav>
+        <br>
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Modifier le contrat de {{ salarie.nom_salarie }} {{ salarie.prenom_salarie }}</h2> 
+            </div>
+        </div>
+        <form id="dateForm" action="{% url 'modifier_contrat_salarie' contrat_id=contrat.id salarie_id=salarie.id %}" method="POST">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <!-- Partie pour gérer le formulaire en cas de modification d'un contrat simple ou une affectation -->
+                    {% if affectation %}
+                    <!-- Code pour gérer les champs liés à une affectation -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Changer l'entité au quel le salarié à été affecté:</label>
+                                <div class="d-flex align-items-center">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="radio" name="affectationType" id="radioClient" value="client" {% if affectation.client %}checked{% endif %}>
+                                        <label class="form-check-label" for="radioClient">Client</label>
+                                    </div>
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="radio" name="affectationType" id="radioEntreprise" value="entreprise" {% if affectation.entreprise_simple %}checked{% endif %}>
+                                        <label class="form-check-label" for="radioEntreprise">Entreprise</label>
+                                    </div>
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="radio" name="affectationType" id="radioPartenaire" value="partenaire" {% if affectation.entreprise_partenaire %}checked{% endif %}>
+                                        <label class="form-check-label" for="radioPartenaire">Partenaire</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Champs spécifiques à l'affectation -->
+                    <div class="row">
+                        <!-- Entreprise -->
+                        <div class="col-lg-6 col-sm-12" id="entrepriseField" {% if not affectation.entreprise_simple %}style="display: none;"{% endif %}>
+                            <div class="form-group">
+                                <label for="entreprise_simple">Entreprise </label>
+                                <select class="select" id="entreprise_simple" name="entreprise_simple">
+                                    <option value="">Sélectionner...</option>
+                                    {% for entreprise in entreprises %}
+                                        <option value="{{ entreprise.id }}" {% if affectation.entreprise_simple and affectation.entreprise_simple.id == entreprise.id %}selected{% endif %}>{{ entreprise.nom_entreprise }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% if errors.entreprise_simple %}
+                                    <div class="text-danger">{{ errors.entreprise_simple }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- Partenaire -->
+                        <div class="col-lg-6 col-sm-12" id="partenaireField" {% if not affectation.entreprise_partenaire %}style="display: none;"{% endif %}>
+                            <div class="form-group">
+                                <label for="partenaire">Partenaire</label>
+                                <select class="select" id="partenaire" name="partenaire">
+                                    <option value="">Sélectionner...</option>
+                                    {% for partenaire in partenaires %}
+                                        <option value="{{ partenaire.id }}" {% if affectation.entreprise_partenaire and affectation.entreprise_partenaire.id == partenaire.id %}selected{% endif %}>
+                                            {{ partenaire.entreprise.nom_entreprise }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% if errors.partenaire %}
+                                    <div class="text-danger">{{ errors.partenaire }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- Client -->
+                        <div class="col-lg-6 col-sm-12" id="clientField" {% if not affectation.client %}style="display: none;"{% endif %}>
+                            <div class="form-group">
+                                <label for="client">Client</label>
+                                <select class="select" id="client" name="client">
+                                    <option value="">Sélectionner...</option>
+                                    {% for client in clients %}
+                                        <option value="{{ client.id }}" {% if affectation.client and affectation.client.id == client.id %}selected{% endif %}>
+                                            {{ client.nom_client }} {{ client.prenom_client }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% if errors.client %}
+                                    <div class="text-danger">{{ errors.client }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Code pour gérer les champs d'un contrat simple -->
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="department_assigner">Changer la section assigner au salarié</label>
+                                <select class="select" id="department_assigner" name="department_assigner">
+                                    <option value="">Sélectionner...</option>
+                                    {% for departement in departements %}
+                                        <option value="{{ departement.id }}" {% if contrat.salarie.department_assigner and contrat.salarie.department_assigner.id == departement.id %}selected{% endif %}>{{ departement.nom_dep }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% if errors.department_assigner %}
+                                    <div class="text-danger">{{ errors.department_assigner }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="entreprise">Changer entreprise contractante</label>
+                                <select class="select" id="entreprise" name="entreprise">
+                                    <option value="">Sélectionner...</option>
+                                    {% for entreprise in entreprises %}
+                                        <option value="{{ entreprise.id }}" {% if contrat.entreprise and contrat.entreprise.id == entreprise.id %}selected{% endif %}>{{ entreprise.nom_entreprise }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% if errors.entreprise %}
+                                    <div class="text-danger">{{ errors.entreprise }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="nom_identifiant_contrat">Nom pour identifer le contrat:</label>
+                                <input type="text" class="form-control" id="nom_identifiant_contrat" name="nom_identifiant_contrat" value="{{ contrat.nom_identifiant_contrat }}">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="type_contrat"> Modifier type de contrat:</label>
+                                <input type="text" class="form-control" id="type_contrat" name="type_contrat" value="{{ contrat.type_contrat }}">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="dateDebutInput">Date début:</label>
+                                <div class="input-groupicon" id="datetimepicker">
+                                    <input type="text" class="datetimepicker" id="dateDebutInput" name="date_debut" value="{{ contrat.date_debut|date:'d-m-Y' }}" placeholder="JJ-MM-AAAA">
+                                    <div class="addonset">
+                                        <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
+                                    </div>
+                                </div>
+                                {% if errors.date_debut %}
+                                    <div class="text-danger">{{ errors.date_debut }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="dateFinInput">Date fin:</label>
+                                <div class="input-groupicon" id="datetimepicker">
+                                    <input type="text" class="datetimepicker" id="dateFinInput" name="date_fin" value="{{ contrat.date_fin|date:'d-m-Y' }}" placeholder="JJ-MM-AAAA">
+                                    <div class="addonset">
+                                        <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
+                                    </div>
+                                </div>
+                                {% if errors.date_fin %}
+                                    <div class="text-danger">{{ errors.date_fin }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="fonction_salarie">Poste Assigner</label>
+                                <input type="text" class="form-control" id="fonction_salarie" name="fonction_salarie" value="{{ contrat.fonction_salarie }}" placeholder="Veuillez saisir le type du contrat" required>
+                                {% if errors.fonction_salarie %}
+                                    <div class="text-danger">{{ errors.fonction_salarie }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="detail">Détails</label>
+                                <textarea class="form-control" id="detail" name="detail" rows="4">{{ contrat.detail }}</textarea>
+                                {% if errors.detail %}
+                                    <div class="text-danger">{{ errors.detail }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary me-2">Mettre à jour</button>
+                            <a href="{% url 'liste_contrats_un_salarie' salarie.id %}" class="btn btn-danger me-2">Annuler</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtenir les éléments du DOM
+        const radioEntreprise = document.getElementById('radioEntreprise');
+        const radioPartenaire = document.getElementById('radioPartenaire');
+        const radioClient = document.getElementById('radioClient');
+    
+        const entrepriseField = document.getElementById('entrepriseField');
+        const partenaireField = document.getElementById('partenaireField');
+        const clientField = document.getElementById('clientField');
+    
+        function updateFieldVisibility() {
+            // Masquer toutes les sections au départ
+            entrepriseField.style.display = 'none';
+            partenaireField.style.display = 'none';
+            clientField.style.display = 'none';
+    
+            // Afficher la section selon le bouton radio sélectionné
+            if (radioEntreprise && radioEntreprise.checked) {
+                entrepriseField.style.display = 'block';
+            } else if (radioPartenaire && radioPartenaire.checked) {
+                partenaireField.style.display = 'block';
+            } else if (radioClient && radioClient.checked) {
+                clientField.style.display = 'block';
+            }
+        }
+    
+        // Ajouter des écouteurs d'événements pour chaque bouton radio
+        if (radioEntreprise) radioEntreprise.addEventListener('change', updateFieldVisibility);
+        if (radioPartenaire) radioPartenaire.addEventListener('change', updateFieldVisibility);
+        if (radioClient) radioClient.addEventListener('change', updateFieldVisibility);
+    
+        // Appeler la fonction au chargement de la page pour afficher la bonne section
+        updateFieldVisibility();
+    });
+    
+</script>
+<!-- MAIN -->
+{% endblock content %}

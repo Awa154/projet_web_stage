@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'hrWeb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'db_webhr',
+        'NAME': 'db_projet_stage',
         'USER':'postgres',
         'PASSWORD':'xuner2004',
         'HOST': '127.0.0.1',
@@ -147,16 +147,22 @@ SESSION_COOKIE_AGE = 86400
 # Pour fermer automatiquement la session à la fermeture du navigateur
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-
+# Configurer le broker (ici, on utilise Redis)
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-CELERY_BEAT_SCHEDULE = {
-    'check_contracts': {
-        'task': 'myapp.tasks.check_contracts',
-        'schedule': crontab(minute=0, hour=0),  # Exécution quotidienne à minuit
-    },
-}
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 # Autres configurations Celery
 CELERY_TIMEZONE = 'UTC'
 CELERY_ENABLE_UTC = True
+
+CELERY_BEAT_SCHEDULE = {
+    'verifier_contrats_chaque_jour': {
+        'task': 'app_name.tasks.verifier_contrats',
+        'schedule': crontab(hour=0, minute=0),  # Exécute tous les jours à minuit
+    },
+}
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'

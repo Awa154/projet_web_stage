@@ -1,0 +1,354 @@
+{% extends 'layouts/basedashboardadmin.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li>
+                    <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Administrations</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Managements</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_roles' %}">Rôles</a></li>
+                        <li><a href="{% url 'liste_admins' %}">Administrateurs</a></li>
+                        <li><a href="{% url 'liste_entreprises' %}">Entreprises</a></li>
+                        <li><a href="{% url 'liste_contrats_affectations' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Gestions</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span>Comptes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_salaries' %}" class="active">Salariés</a></li>
+                        <li><a href="{% url 'liste_partenaires' %}">Partenaires</a></li>
+                        <li><a href="{% url 'liste_clients' %}">Clients</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li>
+                    <a href="{% url 'liste_doc_contrats' %}"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fichesPaie' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_fichesPaie_affectation' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_demandes' %}">Partenaires et clients</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Paramètres</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Configuration</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'configurer_email' %}">Email</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+    {% endblock sidebar %}
+<!-- sidebar -->
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'liste_salaries' %}">Liste des salariés</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'creer_salarie' %}">Ajouter un salarié</a></li>
+            </ol>
+        </nav>
+        <br>
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Salariés</h2> 
+                <h2>Créer un compte pour un salarié</h2> 
+            </div>
+        </div>
+        <form id="dateForm" action="{% url 'creer_salarie' %}" method="POST">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <div id="basic-pills-wizard" class="twitter-bs-wizard">
+                        <ul class="twitter-bs-wizard-nav">
+                            <li class="nav-item">
+                                <a href="#info-per" class="nav-link" data-toggle="tab">
+                                    <div class="step-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="info-per">
+                                        <i class="far fa-user"></i>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#info-pro" class="nav-link" data-toggle="tab">
+                                    <div class="step-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="info-pro">
+                                        <i class="fas fa-briefcase"></i>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content twitter-bs-wizard-tab-content">
+                            <div class="tab-pane" id="info-per">
+                                <div class="row">              
+                                    <div class="col-lg-12">
+                                        <h3>Informations personnels</h3> 
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="nom_salarie">Nom</label>
+                                            <input type="text" class="form-control" id="nom_salarie" name="nom_salarie" placeholder="Veuillez saisir le nom du salarié" value="{{ nom_salarie }}" >
+                                            {% if errors.nom_salarie %}
+                                                    <div class="text-danger">{{ errors.nom_salarie }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="prenom_salarie">Prénom</label>
+                                            <input type="text" class="form-control" id="prenom_salarie" name="prenom_salarie" placeholder="Veuillez saisir le prénom du salarié" value="{{ prenom_salarie }}">
+                                            {% if errors.prenom_salarie %}
+                                                    <div class="text-danger">{{ errors.prenom_salarie }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="sexe">Sexe</label>
+                                            <select class="select" id="sexe" name="sexe">
+                                                <option value="">Selectionner...</option>
+                                                <option value="H" {% if sexe == 'H' %}selected{% endif %}>Homme</option>
+                                                <option value="F" {% if sexe == 'F' %}selected{% endif %}>Femme</option>
+                                            </select>
+                                            {% if errors.sexe %}
+                                                <div class="text-danger">{{ errors.sexe }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="dateNaissance">Date de Naissance </label>
+                                            <div class="input-groupicon" id="datetimepicker">
+                                                <input type="text" placeholder="JJ-MM-AAAA" class="datetimepicker" id="dateNaissance" name="dateNaissance" value="{{ dateNaissance }}">
+                                                <div class="addonset">
+                                                    <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="Veuillez saisir l'email" value="{{ email }}">
+                                            {% if errors.email %}
+                                                <div class="text-danger">{{ errors.email }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="adresse">Adresse</label>
+                                            <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Veuillez saisir l'adresse" value="{{ adresse }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="telephone">Téléphone</label>
+                                            <input type="text" class="form-control" id="telephone" name="telephone" placeholder="Veuillez saisir le numéro de téléphone" value="{{ telephone }}">
+                                            {% if errors.telephone %}
+                                                <div class="text-danger">{{ errors.telephone }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                    <li class="next"><a href="javascript: void(0);" class="btn btn-primary" onclick="nextTab()">Suivant <i class="bx bx-chevron-right ms-1"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane" id="info-pro">
+                                <div class="row">  
+                                    <div class="col-lg-12">
+                                        <h4>Informations professionnels</h4> 
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="role">Rôle dans le système</label>
+                                            <select class="select" id="role-fields" name="role" required>
+                                                <option value="">Aucun</option>
+                                                {% for role in roles %}
+                                                    <option value="{{ role.id }}" {% if role.id|stringformat:"s" == role_id|stringformat:"s" %}selected{% endif %}>{{ role.nom_role }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            {% if errors.role %}
+                                                <div class="text-danger">{{ errors.role }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="entreprise">Entreprise contractante</label>
+                                            <select class="select" id="entreprise-fields" name="entreprise" required>
+                                                <option value="">Aucune</option>
+                                                {% for entreprise in entreprises %}
+                                                    <option value="{{ entreprise.id }}" {% if entreprise.id|stringformat:"s" == entreprise_id|stringformat:"s" %}selected{% endif %}>{{ entreprise.nom_entreprise }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            {% if errors.entreprise %}
+                                                <div class="text-danger">{{ errors.entreprise }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="nom_identifiant_contrat">Nom pour identifer le contrat</label>
+                                            <input type="text" class="form-control" id="nom_identifiant_contrat" name="nom_identifiant_contrat" value="{{ nom_identifiant_contrat }}" placeholder="Nom pour identifier le contrat" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="type_contrat">Recruter sous quel type de contrat?</label>
+                                            <input type="text" class="form-control" id="type_contrat" name="type_contrat" value="{{ type_contrat }}" placeholder="Type du contrat" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="dateDebutInput">Date début</label>
+                                            <div class="input-groupicon" id="datetimepicker">
+                                                <input type="text" class="datetimepicker" id="dateDebutInput" name="date_debut" value="{{ date_debut }}" placeholder="JJ-MM-AAAA" required">
+                                                <div class="addonset">
+                                                    <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
+                                                </div>
+                                            </div>
+                                            {% if errors.date_debut %}
+                                                <div class="text-danger">{{ errors.date_debut }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="dateFinInput">Date fin</label>
+                                            <div class="input-groupicon" id="datetimepicker">
+                                                <input type="text" class="datetimepicker" id="dateFinInput" name="date_fin" value="{{ date_fin }}" placeholder="JJ-MM-AAAA" required>
+                                                <div class="addonset">
+                                                    <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
+                                                </div>
+                                            </div>
+                                            {% if errors.date_fin %}
+                                                <div class="text-danger">{{ errors.date_fin }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="departement">Assigner à un département/une section</label>
+                                            <select class="select" id="departement" name="departement" required>
+                                                <option value="">Sélectionnez un département</option>
+                                                {% for departement in departements %}
+                                                    <option value="{{ departement.id }}" {% if departement.id|stringformat:"s" == departement_id|stringformat:"s" %}selected{% endif %}>{{ departement.nom_dep }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            {% if errors.departement %}
+                                                <div class="text-danger">{{ errors.departement }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="type_contrat">Poste Assigner</label>
+                                            <input type="text" class="form-control" id="fonction_salarie" name="fonction_salarie" value="{{ fonction_salarie }}" placeholder="Veuillez saisir le type du contrat" onkeypress="validateInput(event)" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label for="detail">Détail du contrat:</label>
+                                            <textarea class="form-control" id="detail" name="detail" placeholder="Détail du contrat" value="{{ detail }}" rows="4" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="competences" class="mr-2">Compétences</label>
+                                            <div class="row">
+                                                <div class="col-sm-6 col-12">
+                                                    <div id="competences-container">
+                                                        <input type="text" class="form-control mb-2" name="competences" value="{{ competences }}" placeholder="Compétence" title="Compétence">
+                                                    </div>
+                                                </div>
+                                                <!-- Colonne pour le bouton -->
+                                                <div class="col-sm-6 col-12">
+                                                    <button type="button" id="add-competence" class="btn btn-primary">Ajouter</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                    <li class="previous"><a href="javascript: void(0);" class="btn btn-primary" onclick="nextTab()"><i class="bx bx-chevron-left me-1"></i> Précédent</a></li>
+                                    <li><a href="{% url 'liste_salaries' %}" class="btn btn-danger me-2">Annuler</a></li>
+                                    <li><button type="submit" class="btn btn-primary me-2">Enregistrer</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#entreprise-fields').change(function() {
+            var entrepriseId = $(this).val();
+            if (entrepriseId) {
+                $.ajax({
+                    url: "{% url 'get_departements' %}",
+                    data: {
+                        'entreprise_id': entrepriseId
+                    },
+                    success: function(data) {
+                        $('#departement').empty();
+                        $('#departement').append('<option value="">Sélectionnez un département</option>');
+                        $.each(data, function(index, item) {
+                            $('#departement').append('<option value="' + item.id + '">' + item.nom_dep + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#departement').empty();
+                $('#departement').append('<option value="">Sélectionnez un département</option>');
+            }
+        });
+    });
+</script>
+
+<!-- MAIN -->
+{% endblock content %}

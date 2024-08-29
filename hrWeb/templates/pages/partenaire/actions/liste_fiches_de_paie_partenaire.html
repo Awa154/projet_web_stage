@@ -1,0 +1,127 @@
+{% extends 'layouts/basedashboardsalarie.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li class="active">
+                    <a href="{% url 'home_partenaire' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'demande_salarie' %}">Faire une demande</a></li>
+                        <li><a href="{% url 'mes_demandes' %}">Mes demandes</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_contrats_salarie' %}">En cours et Terminer</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fiches_de_paie_salarie' %}" class="active">Payées et Impayées</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock sidebar %}
+<!-- sidebar -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card bg-white">
+                    <div class="card-header">
+                        <h5 class="card-title">Liste des contrats</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified">
+                            <li class="nav-item"><a class="nav-link active" href="#solid-rounded-justified-tab1" data-bs-toggle="tab">En cours</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#solid-rounded-justified-tab2" data-bs-toggle="tab">Terminer</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane show active" id="solid-rounded-justified-tab1">
+                                <table class="table  datanew">
+                                    <thead>
+                                        <tr>
+                                            <th>Salarié</th>
+                                            <th>Fonction salarié</th>
+                                            <th>Date Début Contrat</th>
+                                            <th>Date Fin Contrat</th>
+                                            <th>Montant</th>
+                                            <th>Détails</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for fiche in fiches_paie_payees %}
+                                            <tr>
+                                                <td>{{ fiche.affectation.contrat.salarie.nom_salarie }} {{ fiche.affectation.contrat.salarie.prenom_salarie }}</td>
+                                                <td>{{ fiche.affectation.contrat.fonction_salarie }}</td>
+                                                <td>{{ fiche.affectation.contrat.date_debut }}</td>
+                                                <td>{{ fiche.affectation.contrat.date_fin }}</td>
+                                                <td>{{ fiche.montant }}</td>
+                                                <td>{{ fiche.detail }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane" id="solid-rounded-justified-tab2">
+                                <table class="table  datanew">
+                                    <thead>
+                                        <tr>
+                                            <th>Salarié</th>
+                                            <th>Fonction salarié</th>
+                                            <th>Date Début Contrat</th>
+                                            <th>Date Fin Contrat</th>
+                                            <th>Montant</th>
+                                            <th>Détails</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for fiche in fiches_paie_impayees %}
+                                            <tr>
+                                                <td>{{ fiche.affectation.contrat.salarie.nom_salarie }} {{ fiche.affectation.contrat.salarie.prenom_salarie }}</td>
+                                                <td>{{ fiche.affectation.contrat.fonction_salarie }}</td>
+                                                <td>{{ fiche.affectation.contrat.date_debut }}</td>
+                                                <td>{{ fiche.affectation.contrat.date_fin }}</td>
+                                                <td>{{ fiche.montant }}</td>
+                                                <td>{{ fiche.detail }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>	
+    </div>
+</div>
+{% endblock content %}

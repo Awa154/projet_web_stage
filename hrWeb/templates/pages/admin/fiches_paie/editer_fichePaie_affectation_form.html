@@ -1,0 +1,193 @@
+{% extends 'layouts/basedashboardadmin.html' %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li>
+                    <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Administrations</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Managements</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_roles' %}">Rôles</a></li>
+                        <li><a href="{% url 'liste_admins' %}">Administrateurs</a></li>
+                        <li><a href="{% url 'liste_entreprises' %}">Entreprises</a></li>
+                        <li><a href="{% url 'liste_contrats_affectations' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Gestions</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span>Comptes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_salaries' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_partenaires' %}">Partenaires</a></li>
+                        <li><a href="{% url 'liste_clients' %}">Client</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li>
+                    <a href="{% url 'liste_doc_contrats' %}"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fichesPaie' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_fichesPaie_affectation' %}" class="active">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_demandes' %}">Partenaires et clients</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Paramètres</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Configuration</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'configurer_email' %}">Email</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+    {% endblock sidebar %}
+<!-- sidebar -->
+
+{% block content %}
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <div class="content">
+            <!-- Afficher les messages -->
+            {% if messages %}
+            <div class="alert-messages">
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{% url 'liste_fichesPaie_affectation' %}">Liste des fiches de paie</a></li>
+                    <li class="breadcrumb-item active"><a href="{% url 'editer_fichePaie_affectation' affectation.id %}">Editer une fiche de paie</a></li>
+                </ol>
+            </nav>
+            <br>
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Editer la fiche de paie</h2>
+                </div>
+            </div>
+            <form id="dateForm" action="{% url 'editer_fichePaie_affectation' affectation.id %}" method="POST">
+                {% csrf_token %}
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="nom_identifiant_paie_affectation">Identifiant de la paie</label>
+                                    <input type="text" class="form-control" id="nom_identifiant_paie_affectation" name="nom_identifiant_paie_affectation" value="{{ fiche_de_paie.nom_identifiant_paie_affectation }}">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="dateDebutInput">Échéance </label>
+                                    <div class="input-groupicon" id="datetimepicker">
+                                        <input type="text" class="datetimepicker" id="dateDebutInput" name="echeance" value="{{ fiche_de_paie.echeance|date:'Y-m-d' }}" placeholder="JJ-MM-AAAA" required">
+                                        <div class="addonset">
+                                            <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
+                                        </div>
+                                    </div>
+                                    {% if errors.echeance %}
+                                        <div class="text-danger">{{ errors.echeance }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="heure_travail">Heures de travail</label>
+                                    <input type="number" class="form-control" id="heure_travail" name="heure_travail" value="{{ fiche_de_paie.heure_travail }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="taux_heure_travail">Taux horaire</label>
+                                    <input type="text" step="0.01" class="form-control" id="taux_heure_travail" name="taux_heure_travail" value="{{ fiche_de_paie.taux_heure_travail }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="heure_supp">Heures supplémentaires</label>
+                                    <input type="text" class="form-control" id="heure_supp" name="heure_supp" value="{{ fiche_de_paie.heure_supp }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="taux_heure_supp">Taux horaire supplémentaire</label>
+                                    <input type="text" step="0.01" class="form-control" id="taux_heure_supp" name="taux_heure_supp" value="{{ fiche_de_paie.taux_heure_supp }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="nbre_jour_travail">Nombre de jours travaillés</label>
+                                    <input type="text" class="form-control" id="nbre_jour_travail" name="nbre_jour_travail" value="{{ fiche_de_paie.nbre_jour_travail }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="prime_salissure">Prime de salissure</label>
+                                    <input type="text" class="form-control" id="prime_salissure" name="prime_salissure" value="{{ fiche_de_paie.prime_salissure }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="indemnite_depl">Indemnité de déplacement</label>
+                                    <input type="text" class="form-control" id="indemnite_depl" name="indemnite_depl" value="{{ fiche_de_paie.indemnite_depl }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="detail">Détails</label>
+                                    <textarea class="form-control" id="detail" name="detail">{{ fiche_de_paie.detail }}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" class="form-check-input" id="est_payer" name="est_payer" {% if fiche_de_paie.est_payer %}checked{% endif %}>
+                                    <label class="form-check-label" for="est_payer">Est payé</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                                <a href="{% url 'liste_fichesPaie_affectation' %}" class="btn btn-danger me-2">Annuler</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+<!-- MAIN -->
+{% endblock content %}
+

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fiche de Paie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        h1, h2, h4 {
+            text-align: center;
+        }
+        .contract-details, .clause-details {
+            margin: 20px 0;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .signature-container {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .signature-section {
+            display: inline-block;
+            width: 45%;
+            vertical-align: top;
+            margin-right: 5%;
+        }
+        
+        .signature-section:last-child {
+            margin-right: 0;
+        }
+
+        /* Styles pour le tableau */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Style pour gérer le texte long */
+        td {
+            word-wrap: break-word;
+            max-width: 100px;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Titre de la fiche de paie au centre -->
+    <h3><strong>Référence: </strong> {{ fiche_de_paie.nom_identifiant_paie_affectation }}</h3>
+    <h5><strong>Fait le :</strong> {{ fiche_de_paie.fait_le }}</h5>
+    <h2 class="text-center">Fiche de Paie</h2>
+    <!-- Informations sur l'envoyeur et le receveur -->
+    <h4><strong>Durée: </strong> Du {{ affectation.contrat.date_debut }} au {{ affectation.contrat.date_fin }}</h5>
+    <h5><strong>À payer avant :</strong> {{ fiche_de_paie.echeance }}</h5>
+    <div>
+        <div style="float: left; width: 45%;">
+            <h5><strong>Emmetteur :</strong></h5>
+            <p>{{ affectation.creer_par.admin.nom_admin }} {{ affectation.creer_par.admin.prenom_admin }}</p>
+            <p>{{ affectation.creer_par.email }}</p>
+            <p>{{ affectation.creer_par.telephone }}</p>
+        </div>
+        <div style="float: right; width: 45%;">
+            <h5><strong>Récipient :</strong></h5>
+            {% if affectation.client %}
+                <p>{{ affectation.client.nom_client }} {{ affectation.client.prenom_client }}</p>
+                <p>{{ affectation.client.compte.email }}</p>
+                <p>{{ affectation.client.compte.telephone }}</p>
+            {% elif affectation.entreprise_partenaire %}
+                <p>{{ affectation.entreprise_partenaire.nom_agent_entreprise }} {{ affectation.entreprise_partenaire.prenom_agent_entreprise }}</p>
+                <p>{{ affectation.entreprise_partenaire.entreprise.compte.email }}</p>
+                <p>{{ affectation.entreprise_partenaire.compte.telephone }}</p>
+            {% elif affectation.entreprise_simple %}
+                <p>{{ affectation.entreprise_simple.nom_entreprise }}</p>
+            {% endif %}
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <!-- Tableau des détails de la fiche de paie -->
+    <table>
+        <thead>
+            <tr>
+                <th>Désignation</th>
+                <th>Description</th>
+                <th>Coût total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="detail-cell">Détails</td>
+                <td><p>{{ fiche_de_paie.detail }}</p></td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Montant de base</td>
+                <td>-</td>
+                <td>{{ fiche_de_paie.montant_de_base }} CFA</td>
+            </tr>
+            <tr>
+                <td>Montant total</td>
+                <td>-</td>
+                <td>{{ fiche_de_paie.montant_total }} CFA</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Signature de l'envoyeur -->
+    <div class="signature-container">
+        <div class="signature-section">
+            <h5><strong>Signature de la direction</strong></h5>
+        </div>
+    </div>
+</body>
+</html>

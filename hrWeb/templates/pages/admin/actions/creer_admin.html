@@ -1,0 +1,242 @@
+{% extends 'layouts/basedashboardadmin.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li >
+                    <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Administrations</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Managements</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_roles' %}">Rôles</a></li>
+                        <li><a href="{% url 'liste_admins' %}" class="active">Administrateurs</a></li>
+                        <li><a href="{% url 'liste_entreprises' %}">Entreprises</a></li>
+                        <li><a href="{% url 'liste_contrats_affectations' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Gestions</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span>Comptes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_salaries' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_partenaires' %}">Partenaires</a></li>
+                        <li><a href="{% url 'liste_clients' %}">Client</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li>
+                    <a href="{% url 'liste_doc_contrats' %}"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fichesPaie' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_fichesPaie_affectation' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_demandes' %}">Partenaires et clients</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Paramètres</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Configuration</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'configurer_email' %}">Email</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+    {% endblock sidebar %}
+<!-- sidebar -->
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'liste_admins' %}">Liste des administrateurs</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'creer_admin' %}">Ajouter administrateur</a></li>
+            </ol>
+        </nav>
+        <br>
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Administrateurs</h2> 
+            </div>
+            <div class="page-btn">
+                <a href="{% url 'liste_admins' %}" class="btn btn-cancel">Annuler</a>
+            </div>
+        </div>
+        <form action="{% url 'creer_admin' %}" method="POST">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <div id="basic-pills-wizard" class="twitter-bs-wizard">
+                        <ul class="twitter-bs-wizard-nav">
+                            <li class="nav-item">
+                                <a href="#info-per" class="nav-link" data-toggle="tab">
+                                    <div class="step-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="info-per">
+                                        <i class="far fa-user"></i>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#info-pro" class="nav-link" data-toggle="tab">
+                                    <div class="step-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="info-pro">
+                                        <i class="fas fa-briefcase"></i>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content twitter-bs-wizard-tab-content">
+                            <div class="tab-pane" id="info-per">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h3>Informations personnels</h3> 
+                                    </div>
+                                    <div class="col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="nom_admin">Nom</label>
+                                            <input type="text" class="form-control" id="nom_admin" name="nom_admin" placeholder="Veuillez saisir le nom" value="{{ nom_admin }}" required>
+                                            {% if errors.nom_admin %}
+                                                <div class="text-danger">{{ errors.nom_admin }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="prenom_admin">Prénom</label>
+                                            <input type="text" class="form-control" id="prenom_admin" name="prenom_admin" placeholder="Veuillez saisir le prénom" value="{{ prenom_admin }}" required>
+                                            {% if errors.prenom_admin %}
+                                                <div class="text-danger">{{ errors.prenom_admin }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="sexe">Sexe</label>
+                                            <select class="select" id="sexe" name="sexe" required>
+                                                <option value="">Choix...</option>
+                                                <option value="H" {% if sexe == 'H' %}selected{% endif %}>Homme</option>
+                                                <option value="F" {% if sexe == 'F' %}selected{% endif %}>Femme</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="telephone">Téléphone</label>
+                                            <input type="text" class="form-control" id="telephone" name="telephone" placeholder="Veuillez saisir le numéro de téléphone" value="{{ telephone }}">
+                                            {% if errors.telephone %}
+                                                <div class="text-danger">{{ errors.telephone }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="Veuillez saisir l'email" value="{{ email }}">
+                                            {% if errors.email %}
+                                                <div class="text-danger">{{ errors.email }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="adresse">Adresse</label>
+                                            <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Veuillez saisir l'adresse" value="{{ adresse }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                    <li class="next"><a href="javascript: void(0);" class="btn btn-primary" onclick="nextTab()">Suivant <i class="bx bx-chevron-right ms-1"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane" id="info-pro">
+                                <div class="row">   
+                                    <div class="col-lg-12">
+                                        <h3>Informations professionnels</h3> 
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="role">Rôle dans le système</label>
+                                            <select class="select" id="role-fields" name="role" required>
+                                                <option value="">Aucun</option>
+                                                {% for role in roles %}
+                                                    <option value="{{ role.id }}" {% if role.id|stringformat:"s" == role_id|stringformat:"s" %}selected{% endif %}>{{ role.nom_role }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            {% if errors.role %}
+                                                <div class="text-danger">{{ errors.role }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="travail_chez">Travail chez:</label>
+                                            <select class="select" id="travail_chez-fields" name="travail_chez" required>
+                                                <option value="">Aucun</option>
+                                                {% for entreprise in entreprises %}
+                                                    <option value="{{ entreprise.id }}" {% if entreprise.id|stringformat:"s" == entreprise_id|stringformat:"s" %}selected{% endif %}>{{ entreprise.nom_entreprise }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            {% if errors.travail_chez %}
+                                                <div class="text-danger">{{ errors.travail_chez }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="fonction_admin">Fonction de l'admin</label>
+                                            <input type="text" class="form-control" id="fonction_admin" name="fonction_admin" placeholder="Veuillez saisir la fonction de l'admin" value="{{ fonction_admin }}" required>
+                                            {% if errors.fonction_admin %}
+                                                <div class="text-danger">{{ errors.fonction_admin }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                    <li class="previous"><a href="javascript: void(0);" class="btn btn-primary" onclick="nextTab()"><i class="bx bx-chevron-left me-1"></i> Précédent</a></li>
+                                    <li><button type="submit" class="btn btn-primary me-2">Enregistrer</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MAIN -->
+{% endblock content %}

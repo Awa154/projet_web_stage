@@ -1,0 +1,132 @@
+{% extends 'layouts/basedashboardsalarie.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li class="active">
+                    <a href="{% url 'home_salarie' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_contrats_salarie' %}">En cours et Terminer</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fiches_de_paie_salarie' %}">Payées et Impayées</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+    {% endblock sidebar %}
+<!-- sidebar -->
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Profil</h4>
+                <h6>Profil Salarié</h6>
+            </div>
+        </div>
+        <form action="{% url 'profile_salarie' %}" method="POST">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="profile-set">
+                    <div class="profile-top">
+                        <div class="profile-content">
+                            <div class="profile-contentname">
+                                <h2>{{ salarie_info.nom_salarie }} {{ salarie_info.prenom_salarie }}</h2>
+                                <h4>Mettre à jour ses informations personnels.</h4>
+                            </div>
+                        </div>
+                        <div class="ms-auto">
+                            <a href="{% url 'changer_mot_de_passe' %}" class="btn btn-submit me-2">Changer mot de passe</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="text" id="email" name="email" value="{{ user.email }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="nom_salarie">Nom d'utilisateur:</label>
+                            <input type="text" id="nom_utilisateur" name="nom_utilisateur" value="{{ user.nom_utilisateur }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="nom_salarie">Nom:</label>
+                            <input type="text" id="nom_salarie" name="nom_salarie" value="{{ salarie_info.nom_salarie }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="prenom_salarie">Prénom:</label>
+                            <input type="text" id="prenom_salarie" name="prenom_salarie" value="{{ salarie_info.prenom_salarie }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label for="dateNaissance">Date de Naissance </label>
+                            <div class="input-groupicon" id="datetimepicker">
+                                <input type="text" placeholder="JJ-MM-AAAA" class="datetimepicker" id="dateNaissance" name="dateNaissance" value="{{ salarie_info.dateNaissance }}">
+                                <div class="addonset">
+                                    <img src="{% static 'assets/img/icons/calendars.svg' %}" alt="img">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="telephone">Téléphone:</label>
+                            <input type="text" id="telephone" name="telephone" value="{{ user.telephone }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="adresse">Adresse:</label>
+                            <input type="text" id="adresse" name="adresse" value="{{ user.adresse }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                        <a href="#l" class="btn btn-cancel">Annuler</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- MAIN -->
+{% endblock content %}

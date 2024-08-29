@@ -1,0 +1,120 @@
+{% extends 'layouts/basedashboardclient.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li class="active">
+                    <a href="{% url 'home_partenaire' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'demande_client' %}">Faire une demande</a></li>
+                        <li><a href="{% url 'mes_demandes_client' %}">Mes demandes</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_contrats_salarie' %}">En cours et Terminer</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fiches_de_paie_salarie' %}">Payées et Impayées</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock sidebar %}
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-12 d-flex">
+                <div class="dash-count">
+                    <div class="dash-counts">
+                        <h4>Bienvenue sur StaffLinker</h4>
+                    </div>
+                    <div class="dash-imgs">
+                        <a href="#" class="logo">
+                            <h2>StaffLinker</h2>
+                        </a>
+                        <a href="#" class="logo">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-sm-6 col-12 d-flex">
+                <div class="dash-count das2">
+                    <div class="dash-counts">
+                        <h4><span class="counters" data-count="{{ total_contrats }}">{{ total_contrats }}</span></h4>
+                        <h5>Total des contrats</h5>
+                    </div>
+                    <div class="dash-imgs">
+                        <i data-feather="user"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12 d-flex">
+                <div class="dash-count">
+                    <div class="dash-counts">
+                        <h4><span class="counters" data-count="{{ total_demandes }}">{{ total_demandes }}</span></h4>
+                        <h5>Total demandes</h5>
+                    </div>
+                    <div class="dash-imgs">
+                        <i data-feather="user-check"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12 d-flex">
+                <div class="dash-count das3">
+                    <div class="dash-counts">
+                        <h4><span class="counters" data-count="{{ fiches_paie_payees }}">{{ fiches_paie_payees }}</span></h4>
+                        <h5>Fiches de paie payées</h5>
+                    </div>
+                    <div class="dash-imgs">
+                        <i data-feather="user"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-12 d-flex">
+                <div class="dash-count das1">
+                    <div class="dash-counts">
+                        <h4><span class="counters" data-count="{{ fiches_paie_impayees }}">{{ fiches_paie_impayees }}</span></h4>
+                        <h5>Fiches de paie impayées</h5>
+                    </div>
+                    <div class="dash-imgs">
+                        <i data-feather="file-text"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

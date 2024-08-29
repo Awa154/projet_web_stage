@@ -1,0 +1,128 @@
+{% extends 'layouts/basedashboardclient.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li class="active">
+                    <a href="{% url 'home_partenaire' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'demande_client' %}">Faire une demande</a></li>
+                        <li><a href="{% url 'mes_demandes_client' %}">Mes demandes</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_contrats_salarie' %}">En cours et Terminer</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fiches_de_paie_salarie' %}">Payées et Impayées</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock sidebar %}
+<!-- sidebar -->
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Profil</h4>
+                <h6>Profil Client</h6>
+            </div>
+        </div>
+        <form action="{% url 'profile_entreprise' %}" method="POST">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="profile-set">
+                    <div class="profile-top">
+                        <div class="profile-content">
+                            <div class="profile-contentname">
+                                <h2>{{ client_info.nom_client }} {{ client_info.prenom_client }}</h2>
+                                <h4>Mettre à jour ses informations personnels.</h4>
+                            </div>
+                        </div>
+                        <div class="ms-auto">
+                            <a href="{% url 'changer_mot_de_passe' %}" class="btn btn-submit me-2">Changer mot de passe</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="text" id="email" name="email" value="{{ user.email }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="nom_entreprise">Nom d'utilisateur:</label>
+                            <input type="text" id="nom_utilisateur" name="nom_utilisateur" value="{{ user.nom_utilisateur }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="nom_entreprise">Nom client:</label>
+                            <input type="text" id="nom_client" name="nom_client" value="{{ client_info.nom_client }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="nom_entreprise">Prénom client:</label>
+                            <input type="text" id="prenom_client" name="prenom_client" value="{{ client_info.prenom_client }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="adresse">Adresse:</label>
+                            <input type="text" id="adresse" name="adresse" value="{{ user.adresse }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="telephone">Téléphone:</label>
+                            <input type="text" id="telephone" name="telephone" value="{{ user.telephone }}">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                        <a href="{% url 'home_entreprise' %}" class="btn btn-cancel">Annuler</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- MAIN -->
+{% endblock content %}

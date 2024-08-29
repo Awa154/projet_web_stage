@@ -32,10 +32,46 @@
 
 <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 
+<link rel="stylesheet" href="{% static 'assets/plugins/twitter-bootstrap-wizard/form-wizard.css' %}">
+
 <style>
 	.error {
 		color: red;
 		font-size: 0.875em;
+	}
+	body {
+		font-family: Arial, sans-serif;
+		line-height: 1.6;
+	}
+	h1, h2, h4 {
+		text-align: center;
+	}
+	.contract-details, .clause-details {
+		margin: 20px 0;
+	}
+	.section-title {
+		font-weight: bold;
+		margin-top: 30px;
+		margin-bottom: 10px;
+	}
+	.signature-container {
+		width: 100%;
+		text-align: center; /* Centrer le contenu si nécessaire */
+	}
+	
+	.signature-section {
+		display: inline-block;
+		width: 45%; /* Ajustez cette valeur pour contrôler la largeur de chaque section */
+		vertical-align: top; /* Aligner les sections en haut */
+		margin-right: 5%; /* Espacement entre les sections */
+	}
+
+	td.detail-cell {
+		max-width: 200px; /* Ajustez cette valeur selon vos besoins */
+	}
+	
+	.signature-section:last-child {
+		margin-right: 0; /* Pas de marge pour le dernier élément */
 	}
 </style>
 
@@ -51,8 +87,8 @@
 				<a href="#" class="logo">
 					<img src="{% static 'assets/img/logo.png' %}" alt="">
 				</a>
-				<a href="#" class="logo-small">
-					<img src="{% static 'assets/img/logo-small.png' %}" alt="">
+				<a href="#" class="logo">
+					<h2>StaffLinker</h2>
 				</a>
 			</div>
 			<a id="mobile_btn" class="mobile_btn" href="#sidebar">
@@ -169,8 +205,11 @@
 	<script src="{% static 'assets/plugins/apexchart/apexcharts.min.js' %}"></script>
 	<script src="{% static 'assets/plugins/apexchart/chart-data.js' %}"></script>
 	<script src="{% static 'assets/js/script.js' %}"></script>
-	<script src="{% static 'assets/script/role.js' %}"></script>
-	<script src="{% static 'assets/script/clause.js' %}"></script>
+	<script src="{% static 'assets/script/competence.js' %}"></script>
+	<script src="{% static 'assets/script/article.js' %}"></script>
+	<script src="{% static 'assets/plugins/twitter-bootstrap-wizard/form-wizard.js' %}"></script>
+	<script src="{% static 'assets/plugins/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js' %}"></script>
+	<script src="{% static 'assets/plugins/twitter-bootstrap-wizard/prettify.js"' %}"></script>
 	<!-- Include moment.js (necessary for bootstrap-datetimepicker) -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 	<!-- Include the locale file for French -->
@@ -192,6 +231,10 @@
 				var dateNaissance = $('#dateNaissance').val();
 				var formattedNaissance = moment(dateNaissance, 'DD-MM-YYYY').format('YYYY-MM-DD');
 				$('#dateNaissance').val(formattedNaissance);
+
+				var echeance = $('#echeance').val();
+				var formattedecheancee = moment(echeance, 'DD-MM-YYYY').format('YYYY-MM-DD');
+				$('#echeance').val(formattedecheance);
 			});
 		});
 	</script>

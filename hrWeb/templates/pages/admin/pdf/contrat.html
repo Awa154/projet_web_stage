@@ -1,0 +1,108 @@
+<!-- templates/contrat_template.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Contrat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        h1, h2, h4 {
+            text-align: center;
+        }
+        .contract-details, .clause-details {
+            margin: 20px 0;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .signature-container {
+            width: 100%;
+            text-align: center; /* Centrer le contenu si nécessaire */
+        }
+        
+        .signature-section {
+            display: inline-block;
+            width: 45%; /* Ajustez cette valeur pour contrôler la largeur de chaque section */
+            vertical-align: top; /* Aligner les sections en haut */
+            margin-right: 5%; /* Espacement entre les sections */
+        }
+        
+        .signature-section:last-child {
+            margin-right: 0; /* Pas de marge pour le dernier élément */
+        }
+        
+    </style>
+</head>
+<body>
+    {% if doc_contrat %}
+    <h1> {{ doc_contrat.titre_contrat }}</h1>
+    <h4>{{ doc_contrat.soustitre_contrat }}</h4>
+    <h2>Type de contrat : {{ contrat.type_contrat }}</h2>
+    <h4>{{ doc_contrat.text_intro_contrat }}</h4>
+    {% else %}
+    <p>Aucun document associé.</p>
+    {% endif %}
+    <div class="contract-details">
+        <h5><strong>Période :</strong> Du {{ contrat.date_debut }} au {{ contrat.date_fin }}</h5>
+        {% if contrat.affectation_set.exists %}
+            {% with affectation=contrat.affectation_set.first %}
+                {% if affectation.client %}
+                    <h5>Entre les soussignés : Mme/M. <strong>{{ affectation.client.nom_client }} {{ affectation.client.prenom_client }}</strong>. Demeurant à {{ affectation.client.compte.adresse }},</h5>
+                {% elif affectation.entreprise_partenaire %}
+                    <h5>Entre les soussignés : L'entreprise partenaire <strong>{{ affectation.entreprise_partenaire.entreprise.nom_entreprise }}</strong> qui se situe à {{ affectation.entreprise_partenaire.entreprise.compte.adresse }}, représentée par Mme/M. {{ affectation.entreprise_partenaire.nom_agent_entreprise }} {{ affectation.entreprise_partenaire.prenom_agent_entreprise }},</h5>
+                {% elif affectation.entreprise_simple %}
+                    <h5>Entre les soussignés : L'entreprise <strong>{{ affectation.entreprise_simple.nom_entreprise }}</strong> qui se situe à {{ affectation.entreprise_simple.compte.adresse }},</h5>
+                {% endif %}
+            {% endwith %}
+        {% else %}
+            <h5>Entre les soussignés : L'entreprise <strong>{{ contrat.entreprise.nom_entreprise }}</strong> qui se situe à {{ contrat.entreprise.compte.adresse }},</h5>
+        {% endif %}
+        <h5>D'une part,</h5>
+        <h5>Et,</h5>
+        <h5>Mme/M. {{ contrat.salarie.nom_salarie }} {{ contrat.salarie.prenom_salarie }}. Né(e) le {{ contrat.salarie.dateNaissance }}. Demeurant à {{ contrat.salarie.compte.adresse }}</h5>
+        <h5>D'autre part,</h5>
+        <h5>Il a été convenu ce qui suit :</h5>
+        <br>
+        {% if articles %}
+        <ul>
+            {% for article in articles %}
+            <li>
+                <h3><strong>Article: </strong> {{ article.titre_article }}</h3>
+                <h5>{{ article.detail_article }}</h5>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <h5>Aucun article associé.</h5>
+        {% endif %}
+        <br>
+    </div>
+    <div class="signature-container">
+        <div class="signature-section">
+            <h5><strong>Signature de l'employé :</strong></h5>
+            <p>{{ contrat.salarie.nom_salarie }} {{ contrat.salarie.prenom_salarie }}</p>
+        </div>
+        <div class="signature-section">
+            <h5><strong>Signature de l'employeur :</strong></h5>
+            {% if contrat.affectation_set.exists %}
+                {% with affectation=contrat.affectation_set.first %}
+                    {% if affectation.client %}
+                        <p>{{ affectation.client.nom_client }} {{ affectation.client.prenom_client }}</p>
+                    {% elif affectation.entreprise_partenaire %}
+                        <p>{{ affectation.entreprise_partenaire.entreprise.nom_entreprise }}</p>
+                    {% elif affectation.entreprise_simple %}
+                        <p>{{ affectation.entreprise_simple.nom_entreprise }}</p>
+                    {% endif %}
+                {% endwith %}
+            {% else %}
+                <p>{{ contrat.entreprise.nom_entreprise }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -44,8 +44,8 @@
 				<a href="#" class="logo">
 					<img src="{% static 'assets/img/logo.png' %}" alt="">
 				</a>
-				<a href="#" class="logo-small">
-					<img src="{% static 'assets/img/logo-small.png' %}" alt="">
+				<a href="#" class="logo">
+					<h2>StaffLinker</h2>
 				</a>
 			</div>
 			<a id="mobile_btn" class="mobile_btn" href="#sidebar">
@@ -68,7 +68,7 @@
 								<span class="status online"></span></span>
 								<div class="profilesets">
 									<h6>{{ request.session.user_nom_utilisateur }}</h6>
-									<h5>Partenaire</h5>
+									<h5>Client</h5>
 								</div>
 							</div>
 							<hr class="m-0">
@@ -115,7 +115,6 @@
 			</div>
 		</div>
 		<!-- Fin en tête -->
-
 		<!-- Sidebar -->
 		{% block sidebar %}
 		

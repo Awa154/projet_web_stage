@@ -1,0 +1,160 @@
+{% extends 'layouts/basedashboardadmin.html' %}
+{% block content %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li>
+                    <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Administrations</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Managements</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_roles' %}">Rôles</a></li>
+                        <li><a href="{% url 'liste_admins' %}">Administrateurs</a></li>
+                        <li><a href="{% url 'liste_entreprises' %}">Entreprises</a></li>
+                        <li><a href="{% url 'liste_contrats_affectations' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Gestions</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span>Comptes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_salaries' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_partenaires' %}">Partenaires</a></li>
+                        <li><a href="{% url 'liste_clients' %}" class="active">Clients</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li>
+                    <a href="{% url 'liste_doc_contrats' %}"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fichesPaie' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_fichesPaie_affectation' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_demandes' %}">Partenaires et clients</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Paramètres</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Configuration</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'configurer_email' %}">Email</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+    {% endblock sidebar %}
+<!-- sidebar -->
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'liste_clients' %}">Liste des clients</a></li>
+            </ol>
+        </nav>
+        <br>
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Liste des Clients</h2>
+            </div>
+            <div class="page-btn">
+                <a href="{% url 'creer_client' %}" class="btn btn-added"><img src="{% static 'assets/img/icons/plus.svg' %}" alt="img">Ajouter</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="{% static 'assets/img/icons/filter.svg' %}" alt="img">
+                                <span><img src="{% static 'assets/img/icons/closes.svg' %}" alt="img"></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="{% static 'assets/img/icons/search-white.svg' %}" alt="img"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table  datanew">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                                <th>Adresse</th>
+                                <th>Entreprise affiliée</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for client in clients %}
+                            <tr>
+                                <td>{{ client.nom_client }} {{ client.prenom_client }}</td>
+                                <td>{{ client.compte.email }}</td>
+                                <td>{{ client.compte.telephone }}</td>
+                                <td>{{ client.compte.adresse }}</td>
+                                <td>
+                                    {% if client.entreprise_affilier %}
+                                        {{ client.entreprise_affilier.nom_entreprise }}
+                                    {% else %}
+                                        Aucune entreprise affiliée
+                                    {% endif %}
+                                </td>                                
+                                <td>
+                                    <a href="{% url 'statut' client.compte.id %}">
+                                        {% if client.compte.is_active %}
+                                            <span class="bg-lightred badges">Bloquer</span>  
+                                        {% else %}
+                                            <span class="bg-lightgreen badges">Activer</span>
+                                        {% endif %}
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MAIN -->
+{% endblock content %}

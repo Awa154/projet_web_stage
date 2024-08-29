@@ -30,7 +30,7 @@ class ProtectUrlsMiddleware:
         protected_urls = {
             reverse('home_admin'): ['AD'],
             reverse('home_salarie'): ['SA'],
-            reverse('home_entreprise'): ['EN'],
+            reverse('home_partenaire'): ['EN'],
             reverse('home_client'): ['CL'],
         }
 

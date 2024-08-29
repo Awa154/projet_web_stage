@@ -1,0 +1,250 @@
+{% extends 'layouts/basedashboardadmin.html' %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li>
+                    <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Administrations</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Managements</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_roles' %}">Rôles</a></li>
+                        <li><a href="{% url 'liste_admins' %}">Administrateurs</a></li>
+                        <li><a href="{% url 'liste_entreprises' %}">Entreprises</a></li>
+                        <li><a href="{% url 'liste_contrats_affectations' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Gestions</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span>Comptes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_salaries' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_partenaires' %}">Partenaires</a></li>
+                        <li><a href="{% url 'liste_clients' %}">Client</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li>
+                    <a href="{% url 'liste_doc_contrats' %}" class="active"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fichesPaie' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_fichesPaie_affectation' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_demandes' %}">Partenaires et clients</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Paramètres</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Configuration</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'configurer_email' %}">Email</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+    {% endblock sidebar %}
+<!-- sidebar -->
+
+{% block content %}
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'liste_doc_contrats' %}">Liste des documents de contrat</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'editer_doc_contrat' contrat.id %}">Editer un contrat</a></li>
+            </ol>
+        </nav>
+        <br>
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Editer le contrat</h2>
+                <h3>Aperçu</h3>
+            </div>
+            <div class="page-btn" style="display: flex; gap: 10px;">
+                <a href="#" data-toggle="modal" data-target="#editer_doc_contrat{{ contrat.id }}" class="btn btn-primary">Editer</a>
+                <!-- The Modal -->
+                <div class="modal fade" id="editer_doc_contrat{{ contrat.id }}">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h3 class="modal-title">Edition du contrat</h3>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <form id="dateForm" action="{% url 'editer_doc_contrat' contrat.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="titre_contrat">Titre du contrat</label>
+                                                        <input type="text" class="form-control" id="titre_contrat" name="titre_contrat" value="{{ doc_contrat.titre_contrat }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="soustitre_contrat" placeholder="Titre de du contrat">Sous-titre du contrat</label>
+                                                        <input type="text" class="form-control" id="soustitre_contrat" name="soustitre_contrat"  placeholder="Sous titre du contrat" value="{{ doc_contrat.soustitre_contrat }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="text_intro_contrat">Texte introductif</label>
+                                                        <textarea class="form-control" id="text_intro_contrat" name="text_intro_contrat" placeholder="Entrer un petit text introductif">{{ doc_contrat.text_intro_contrat }}</textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label for="articles" class="mr-2">Articles du Contrat</label>
+                                                        <div class="row">
+                                                            <div class="col-sm-6 col-12">
+                                                                {% for article in articles %}
+                                                                <div id="articles-container">
+                                                                    <div class="article-group mb-2">
+                                                                        <input type="text" class="form-control mb-2" name="article_titres" value="{{ article.titre_article }}" placeholder="Titre de l'article" title="Titre de l'article">
+                                                                        <textarea class="form-control mb-2" name="article_details" placeholder="Détails de l'article">{{ article.detail_article }}</textarea>
+                                                                    </div>
+                                                                </div>
+                                                                {% endfor %}
+                                                                <div id="articles-container">
+                                                                    <div class="article-group mb-2">
+                                                                        <input type="text" class="form-control mb-2" name="article_titres" placeholder="Titre de l'article" title="Titre de l'article">
+                                                                        <textarea class="form-control mb-2" name="article_details" placeholder="Détails de l'article"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Colonne pour le bouton -->
+                                                            <div class="col-sm-6 col-12">
+                                                                <button type="button" id="add-article" class="btn btn-primary">Ajouter un article</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="{% url 'envoyer_contrat_pdf' contrat.id %}" class="btn btn-primary">Envoyer en pdf</a>
+            </div> 
+        </div>
+        <div class="card">
+            <div class="card-body">
+                {% if doc_contrat %}
+                <h1> {{ doc_contrat.titre_contrat }}</h1>
+                <h4>{{ doc_contrat.soustitre_contrat }}</h4>
+                <h2>Type de contrat : {{ contrat.type_contrat }}</h2>
+                <h4>{{ doc_contrat.text_intro_contrat }}</h4>
+                {% else %}
+                <p>Aucun document associé.</p>
+                {% endif %}
+                <div class="contract-details">
+                    <h5><strong>Période :</strong> Du {{ contrat.date_debut }} au {{ contrat.date_fin }}</h5>
+                    {% if contrat.affectation_set.exists %}
+                        {% with affectation=contrat.affectation_set.first %}
+                            {% if affectation.client %}
+                                <h5>Entre les soussignés : Mme/M. <strong>{{ affectation.client.nom_client }} {{ affectation.client.prenom_client }}</strong>. Demeurant à {{ affectation.client.compte.adresse }},</h5>
+                            {% elif affectation.entreprise_partenaire %}
+                                <h5>Entre les soussignés : L'entreprise partenaire <strong>{{ affectation.entreprise_partenaire.entreprise.nom_entreprise }}</strong> qui se situe à {{ affectation.entreprise_partenaire.entreprise.compte.adresse }}, représentée par Mme/M. {{ affectation.entreprise_partenaire.nom_agent_entreprise }} {{ affectation.entreprise_partenaire.prenom_agent_entreprise }},</h5>
+                            {% elif affectation.entreprise_simple %}
+                                <h5>Entre les soussignés : L'entreprise <strong>{{ affectation.entreprise_simple.nom_entreprise }}</strong> qui se situe à {{ affectation.entreprise_simple.compte.adresse }},</h5>
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <h5>Entre les soussignés : L'entreprise <strong>{{ contrat.entreprise.nom_entreprise }}</strong> qui se situe à {{ contrat.entreprise.compte.adresse }},</h5>
+                    {% endif %}
+                    <h5>D'une part,</h5>
+                    <h5>Et,</h5>
+                    <h5>Mme/M. {{ contrat.salarie.nom_salarie }} {{ contrat.salarie.prenom_salarie }}. Né(e) le {{ contrat.salarie.dateNaissance }}. Demeurant à {{ contrat.salarie.compte.adresse }}</h5>
+                    <h5>D'autre part,</h5>
+                    <h5>Il a été convenu ce qui suit :</h5>
+                    <br>
+                    {% if articles %}
+                    <ul>
+                        {% for article in articles %}
+                        <li>
+                            <h3><strong>Article: </strong> {{ article.titre_article }}</h3>
+                            <h5>{{ article.detail_article }}</h5>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <h5>Aucun article associé.</h5>
+                    {% endif %}
+                    <br>
+                </div>
+                <div class="signature-container">
+                    <div class="signature-section">
+                        <h5><strong>Signature de l'employé :</strong></h5>
+                        <p>{{ contrat.salarie.nom_salarie }} {{ contrat.salarie.prenom_salarie }}</p>
+                    </div>
+                    <div class="signature-section">
+                        <h5><strong>Signature de l'employeur :</strong></h5>
+                        {% if contrat.affectation_set.exists %}
+                            {% with affectation=contrat.affectation_set.first %}
+                                {% if affectation.client %}
+                                    <p>{{ affectation.client.nom_client }} {{ affectation.client.prenom_client }}</p>
+                                {% elif affectation.entreprise_partenaire %}
+                                    <p>{{ affectation.entreprise_partenaire.entreprise.nom_entreprise }}</p>
+                                {% elif affectation.entreprise_simple %}
+                                    <p>{{ affectation.entreprise_simple.nom_entreprise }}</p>
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                            <p>{{ contrat.entreprise.nom_entreprise }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MAIN -->
+{% endblock content %}
+

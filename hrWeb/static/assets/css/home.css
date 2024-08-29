@@ -12,6 +12,7 @@
 :root {
     /* Colors */
     --primary-color: #b8b7b7;
+    --header-color: #090909;
     --secondary-color: #2c85bc;
     --white-color: #fff;
     --light-gray-color: #9a9494;
@@ -66,7 +67,7 @@ header {
     top: 0;
     width: 100%;
     z-index: 1;
-    background: var(--primary-color);
+    background: var(--header-color);
 }
 
 nav {
@@ -132,7 +133,7 @@ label .close_btn {
 /* Hero Section */
 .hero_section {
     min-height: 100vh;
-    background: var(--primary-color);
+    background: var(--white-color);
 }
 
 .hero_container {
@@ -153,14 +154,14 @@ label .close_btn {
 .hero_container .text_section h3 {
     font-size: 35px;
     font-weight: 600;
-    color: var(--white-color);
+    color: var(--header-color);
     margin-top: 8px;
 }
 
 .hero_container .text_section p {
     font-size: 20px;
     font-weight: 400;
-    color: var(--white-color);
+    color: var(--header-color);
     margin: 24px 0 40px;
     max-width: 70%;
 }
@@ -184,15 +185,15 @@ label .close_btn {
 }
 
 .hero_container .hero_section_button .button:last-child {
-    color: var(--white-color);
-    border-color: var(--white-color);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
     background: none;
 }
 
 .hero_container .hero_section_button .button:first-child:hover {
-    color: var(--white-color);
+    color: var(--primary-color);
     background: transparent;
-    border-color: var(--white-color);
+    border-color: var(--primary-color);
 }
 
 .hero_container .hero_section_button .button:last-child:hover {

@@ -1,0 +1,179 @@
+{% extends 'layouts/basedashboardadmin.html' %}
+{% load static %}
+{% block sidebar %}
+<!--sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Accueil</span>
+                </li>
+                <li>
+                    <a href="{% url 'home_admin' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Administrations</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span> Managements</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_roles' %}">Rôles</a></li>
+                        <li><a href="{% url 'liste_admins' %}">Administrateurs</a></li>
+                        <li><a href="{% url 'liste_entreprises' %}">Entreprises</a></li>
+                        <li><a href="{% url 'liste_contrats_affectations' %}">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Gestions</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/users1.svg' %}" alt="img"><span>Comptes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_salaries' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_partenaires' %}">Partenaires</a></li>
+                        <li><a href="{% url 'liste_clients' %}">Client</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Documents</span>
+                </li>
+                <li>
+                    <a href="{% url 'liste_doc_contrats' %}"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_fichesPaie' %}">Salariés</a></li>
+                        <li><a href="{% url 'liste_fichesPaie_affectation' %}" class="active">Affectations</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'liste_demandes' %}">Partenaires et clients</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">
+                    <span class="hide-menu">Paramètres</span>
+                </li>
+                <li class="submenu">
+                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/settings.svg' %}" alt="img"><span> Configuration</span> <span class="menu-arrow"></span></a>
+                    <ul>
+                        <li><a href="{% url 'configurer_email' %}">Email</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+    {% endblock sidebar %}
+<!-- sidebar -->
+
+{% block content %}
+<!-- MAIN -->
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Afficher les messages -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'liste_fichesPaie_affectation' %}">Liste des fiches de paie</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'editer_fichePaie_affectation' affectation.id %}">Editer une fiche de paie</a></li>
+            </ol>
+        </nav>
+        <br>
+        <div class="page-header">
+            <div class="page-title">
+                <h2>Editer la fiche de paie</h2>
+                <h3>Aperçu</h3>
+            </div>
+            <div class="page-btn" style="display: flex; gap: 10px;">
+                <a href="{% url 'editer_fichePaie_affectation' affectation.id %}" class="btn btn-primary">Editer</a>
+                <a href="{% url 'envoyer_contrat_pdf_paie_affectation' affectation.id %}" class="btn btn-primary">Envoyer en pdf</a>
+            </div> 
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <!-- Titre de la fiche de paie au centre -->
+                <h3><strong>Référence: </strong> {{ fiche_de_paie.nom_identifiant_paie_affectation }}</h3>
+                <h5><strong>Fait le :</strong> {{ fiche_de_paie.fait_le }}</h5>
+                <h2 class="text-center">Fiche de Paie</h2>
+                <!-- Informations sur l'envoyeur et le receveur -->
+                <h4><strong>Durée: </strong> Du {{ affectation.contrat.date_debut }} au {{ affectation.contrat.date_fin }}</h4>
+                <h5><strong>À payer avant :</strong> {{ fiche_de_paie.echeance }}</h5>
+                <div class="row">
+                    <div class="col-sm-6 col-12">
+                        <h5><strong>Emmetteur :</strong></h5>
+                        <h5>{{ affectation.creer_par.admin.nom_admin }} {{ affectation.creer_par.admin.prenom_admin }}</h5>
+                        <h5>{{ affectation.creer_par.email }}</h5>
+                        <h5>{{ affectation.creer_par.telephone }}</h5>
+                    </div>
+                    <div class="col-sm-6 col-12">
+                        <h5><strong>Récipient :</strong></h5>
+                        {% if affectation.client %}
+                            <h5>{{ affectation.client.nom_client }} {{ affectation.client.prenom_client }}</h5>
+                            <h5>{{ affectation.client.compte.email }}</h5>
+                            <h5>{{ affectation.client.compte.telephone }}</h5>
+                        {% elif affectation.entreprise_partenaire %}
+                            <h5>{{ affectation.entreprise_partenaire.nom_agent_entreprise }} {{ affectation.entreprise_partenaire.prenom_agent_entreprise }}</h5>
+                            <h5>{{ affectation.entreprise_partenaire.entreprise.compte.email }}</h5>
+                            <h5>{{ affectation.entreprise_partenaire.compte.telephone }}</h5>
+                        {% elif affectation.entreprise_simple %}
+                            <h5>{{ affectation.entreprise_simple.nom_entreprise }}</h5>
+                        {% endif %}
+                    </div>
+                </div>
+        
+                <!-- Tableau des détails de la fiche de paie -->
+                <table class="table table-bordered mt-4">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Désignation</th>
+                            <th style="width: 60%;">Description</th>
+                            <th style="width: 20%;">Coût total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Détails</td>
+                            <td style="word-wrap: break-word; white-space: pre-wrap;">{{ fiche_de_paie.detail }}</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Montant de base</td>
+                            <td>-</td>
+                            <td>{{ fiche_de_paie.montant_de_base }} CFA</td>
+                        </tr>
+                        <tr>
+                            <td>Montant total</td>
+                            <td>-</td>
+                            <td>{{ fiche_de_paie.montant_total }} CFA</td>
+                        </tr>
+                    </tbody>
+                </table>
+        
+                <!-- Signature de l'envoyeur -->
+                <div class="row mt-4">
+                    <div class="col-md-12 text-right">
+                        <h5><strong>Signature</strong></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+<!-- MAIN -->
+{% endblock content %}
+
