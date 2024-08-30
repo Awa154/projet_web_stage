@@ -10,8 +10,8 @@
                 <li class="nav-small-cap">
                     <span class="hide-menu">Accueil</span>
                 </li>
-                <li class="active">
-                    <a href="{% url 'home_partenaire' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                <li>
+                    <a href="{% url 'home_client' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
                 </li>
                 <li class="nav-small-cap">
                     <span class="hide-menu">Documents</span>
@@ -20,19 +20,25 @@
                     <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
                     <ul>
                         <li><a href="{% url 'demande_client' %}">Faire une demande</a></li>
-                        <li><a href="{% url 'mes_demandes_client' %}">Mes demandes</a></li>
+                        <li>
+                            <a href="{% url 'mes_demandes_client' %}" class="active">
+                                <span>  Mes demandes</span>
+                                <span class="badge badge-warning">{{ user_demandes_en_attente }}</span>
+                                <span class="badge badge-success">{{ user_demandes_validees }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="submenu">
                     <a href="javascript:void(0);"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
                     <ul>
-                        <li><a href="{% url 'liste_contrats_salarie' %}">En cours et Terminer</a></li>
+                        <li><a href="{% url 'liste_salaries_contrats_client' %}">En cours et Terminer</a></li>
                     </ul>
                 </li>
                 <li class="submenu">
                     <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
                     <ul>
-                        <li><a href="{% url 'liste_fiches_de_paie_salarie' %}">Payées et Impayées</a></li>
+                        <li><a href="{% url 'liste_fiches_de_paie_client' %}">Payées et Impayées</a></li>
                     </ul>
                 </li>
             </ul>
@@ -86,23 +92,49 @@
                         <thead>
                             <tr>
                                 <th>Titre</th>
-                                <th>Détail</th>
                                 <th>Statut</th>
+                                <th>Voir plus</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for demande in demandes %}
                             <tr>
                                 <td>{{ demande.titre }}</td>
-                                <td>{{ demande.detail }}</td>
                                 <td>
                                     {% if demande.statut == 'EN_ATTENTE' %}
-                                    En attente
+                                        <span class="badge bg-warning text-dark">En attente</span>
                                     {% elif demande.statut == 'VALIDE' %}
-                                        Validé
+                                        <span class="badge bg-success">Validé</span>
                                     {% elif demande.statut == 'REFUSE' %}
-                                        Refusé
+                                        <span class="badge bg-danger">Refusé</span>
+                                    {% endif %}
                                 </td>
+                                <td>
+                                    <a class="me-3" href="#" data-toggle="modal" data-target="#demande{{ demandeclient.id }}">
+                                        <i data-feather="file-text"></i>
+                                    </a>
+                                    
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="demande{{ demandeclient.id }}">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Large modal -->
+                                            <div class="modal-content">
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title">Détails de la demande</h3>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <h5><strong>Titre :</strong></h5>
+                                                    <p>{{ demande.titre }}</p> 
+                                                    <h5 style="margin-top: 20px;"><strong>Détails :</strong></h5>
+                                                    <p style="margin-bottom: 20px; white-space: pre-wrap; word-wrap: break-word;">{{ demande.details }}</p> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                    <!-- Fin en tête -->
+                                </td> 
                             </tr>
                             {% endfor %}
                         </tbody>

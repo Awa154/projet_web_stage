@@ -49,11 +49,14 @@
                         <li><a href="{% url 'liste_fichesPaie_affectation' %}">Affectations</a></li>
                     </ul>
                 </li>
-                <li class="submenu">
-                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
-                    <ul>
-                        <li><a href="{% url 'liste_demandes' %}">Partenaires et clients</a></li>
-                    </ul>
+                <li>
+                    <a href="{% url 'liste_demandes' %}">
+                        <img src="{% static 'assets/img/icons/time.svg'  %}" alt="img">
+                        <span> Demandes</span> 
+                        <span class="badge badge-info">{{ demandes_en_attente }}</span> <!-- En attente -->
+                        <span class="badge badge-success">{{ demandes_validees }}</span> <!-- Validées -->
+                        <span class="badge badge-danger">{{ demandes_refusees }}</span> <!-- Refusées -->
+                    </a>
                 </li>
                 <li class="nav-small-cap">
                     <span class="hide-menu">Paramètres</span>
@@ -85,8 +88,7 @@
         {% endif %}
         <div class="page-header">
             <div class="page-title">
-                <h4>Profil</h4>
-                <h6>Profil Administrateur</h6>
+                <h4>Profil Administrateur</h4>
             </div>
         </div>
         <form action="{% url 'profile_admin' %}" method="POST">

@@ -72,7 +72,7 @@ urlpatterns = [
     #Compte client
     path('home_client', home_client, name="home_client"),
     path('profile_client', profile_client, name="profile_client"),
-    path('liste_salaries_contrats_client', liste_salaries_contrats_client, name="liste_salaries_contrats_en_cours_client"),
+    path('liste_salaries_contrats_client', liste_salaries_contrats_client, name="liste_salaries_contrats_client"),
     path('liste_fiches_de_paie_client', liste_fiches_de_paie_client, name="liste_fiches_de_paie_client"),
     path('demande_client', demande_client, name='demande_client'),
     path('mes_demandes_client', mes_demandes_client, name='mes_demandes_client'),
@@ -121,7 +121,7 @@ urlpatterns = [
     
     #Demandes
     path('liste_demandes',liste_demandes, name='liste_demandes'),
-    path('changer_statut_demande',changer_statut_demande, name='changer_statut_demande'),
+    path('changer_statut_demande/<int:demande_id>/',changer_statut_demande, name='changer_statut_demande'),
     
     
     

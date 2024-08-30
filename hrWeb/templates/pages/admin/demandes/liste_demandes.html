@@ -49,11 +49,14 @@
                         <li><a href="{% url 'liste_fichesPaie_affectation' %}">Affectations</a></li>
                     </ul>
                 </li>
-                <li class="submenu">
-                    <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
-                    <ul>
-                        <li><a href="{% url 'liste_demandes' %}" class="active">Partenaires et clients</a></li>
-                    </ul>
+                <li>
+                    <a href="{% url 'liste_demandes' %}" class="active">
+                        <img src="{% static 'assets/img/icons/time.svg'  %}" alt="img">
+                        <span> Demandes</span> 
+                        <span class="badge badge-info">{{ demandes_en_attente }}</span> <!-- En attente -->
+                        <span class="badge badge-success">{{ demandes_validees }}</span> <!-- Validées -->
+                        <span class="badge badge-danger">{{ demandes_refusees }}</span> <!-- Refusées -->
+                    </a>
                 </li>
                 <li class="nav-small-cap">
                     <span class="hide-menu">Paramètres</span>
@@ -113,24 +116,60 @@
                     <table class="table datanew">
                         <thead>
                             <tr>
+                                <th>Expéditeur</th>
                                 <th>Titre</th>
-                                <th>Détail</th>
                                 <th>Statut</th>
+                                <th>Voir plus</th>
                                 <td>Actions</td>
                             </tr>
                         </thead>
                         <tbody>
                             {% for demande in demandes %}
                             <tr>
+                                <td>
+                                    {% if demande.compte.salarie %}
+                                        {{ demande.compte.salarie.nom }} {{ demande.compte.salarie.prenom }} (Salarié)
+                                    {% elif demande.compte.client %}
+                                        {{ demande.compte.client.nom_client }} {{ demande.compte.client.prenom_client }} (Client)
+                                    {% elif demande.compte.partenaire %}
+                                        {{ demande.compte.partenaire.nom_partenaire }} (Partenaire)
+                                    {% endif %}
+                                </td>
                                 <td>{{ demande.titre }}</td>
-                                <td>{{ demande.detail }}</td>
                                 <td>
                                     {% if demande.statut == 'EN_ATTENTE' %}
-                                    En attente
+                                        <span class="badge bg-warning text-dark">En attente</span>
                                     {% elif demande.statut == 'VALIDE' %}
-                                        Validé
+                                        <span class="badge bg-success">Validé</span>
                                     {% elif demande.statut == 'REFUSE' %}
-                                        Refusé
+                                        <span class="badge bg-danger">Refusé</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a class="me-3" href="#" data-toggle="modal" data-target="#demande{{ demande.id }}">
+                                        <i data-feather="file-text"></i>
+                                    </a>
+                                    
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="demande{{ demande.id }}">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Large modal -->
+                                            <div class="modal-content">
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h3 class="modal-title">Détails de la demande</h3>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <h5><strong>Titre :</strong></h5>
+                                                    <p>{{ demande.titre }}</p> 
+                                                    <h5 style="margin-top: 20px;"><strong>Détails :</strong></h5>
+                                                    <p style="margin-bottom: 20px; white-space: pre-wrap; word-wrap: break-word;">{{ demande.details }}</p> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                    <!-- Fin en tête -->
                                 </td>
                                 <td>
                                     <div class="dropdown">
@@ -174,6 +213,7 @@
                                                                                         Validé
                                                                                     {% elif demande.statut == 'REFUSE' %}
                                                                                         Refusé
+                                                                                    {% endif %}
                                                                                 <option value="EN_ATTENTE">En attente</option>
                                                                                 <option value="VALIDE">Validé</option>
                                                                                 <option value="REFUSE">Refusé</option>

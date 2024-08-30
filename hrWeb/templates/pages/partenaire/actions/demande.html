@@ -10,7 +10,7 @@
                 <li class="nav-small-cap">
                     <span class="hide-menu">Accueil</span>
                 </li>
-                <li class="active">
+                <li>
                     <a href="{% url 'home_partenaire' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
                 </li>
                 <li class="nav-small-cap">
@@ -19,7 +19,7 @@
                 <li class="submenu">
                     <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
                     <ul>
-                        <li><a href="{% url 'demande_partenaire' %}">Faire une demande</a></li>
+                        <li><a href="{% url 'demande_partenaire' %}" class="active">Faire une demande</a></li>
                         <li><a href="{% url 'mes_demandes_partenaire' %}">Mes demandes</a></li>
                     </ul>
                 </li>
@@ -64,25 +64,25 @@
                 <h2>Faire une demande</h2> 
             </div>
         </div>
-        <form action="{% url 'mes_demandes_partenaire' %}" method="POST">
+        <form action="{% url 'demande_partenaire' %}" method="POST">
             {% csrf_token %}
             <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="nom_dep">Titre:</label>
-                                <input type="text" class="nom_dep" id="nom_dep" name="nom_dep" placeholder="Titre de la demande" required>
+                                <label for="titre">Titre</label>
+                                <input type="text" class="form-control" id="titre" name="titre" placeholder="Titre de la demande" required>
                             </div>
                         </div>
                         <div class="col-lg-12">
                             <div class="form-group">
-                                <label for="detail">Détails</label>
-                                <textarea class="form-control" id="detail" name="detail" placeholder="Détail concernant la demnande" ></textarea>
+                                <label for="details">Détails</label>
+                                <textarea class="form-control" id="details" name="details" placeholder="Détail concernant la demnande" ></textarea>
                             </div>
                         </div>
                         <div class="col-lg-12">
-                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <button type="submit" class="btn btn-primary me-2">Effectuer</button>
                             <a href="{% url 'mes_demandes_partenaire' %}" class="btn btn-danger me-2">Annuler</a>
                         </div>
                     </div>

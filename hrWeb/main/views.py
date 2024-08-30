@@ -56,10 +56,10 @@ def home_admin(request):
             return render(request, 'pages/admin/compte/home.html', context)
         except Admin.DoesNotExist:
             messages.error(request, "Aucun administrateur associé à ce compte.")
-            return redirect('home')
+            return redirect('connexion')
     else:
         messages.error(request, "Vous n'avez pas accès à ce tableau de bord.")
-        return redirect('home')
+        return redirect('connexion')
 
 #Fonction pour retourner la vue vers la page d'accueil
 def home_salarie(request):
@@ -94,10 +94,10 @@ def home_salarie(request):
             return render(request, 'pages/salarie/compte/home.html', context)
         except Salarie.DoesNotExist:
             messages.error(request, "Aucun salarié associé à ce compte.")
-            return redirect('home')
+            return redirect('connexion')
     else:
         messages.error(request, "Vous n'avez pas accès à ce tableau de bord.")
-        return redirect('home')
+        return redirect('connexion')
     
 def liste_contrats_salarie(request):
     # Récupérer le compte de l'utilisateur connecté
@@ -133,10 +133,10 @@ def liste_contrats_salarie(request):
             return render(request, 'pages/salarie/actions/liste_contrats_salarie.html', context)
         except Salarie.DoesNotExist:
             messages.error(request, "Aucun salarié associé à ce compte.")
-            return redirect('home')
+            return redirect('connexion')
     else:
         messages.error(request, "Vous n'avez pas accès à cette page.")
-        return redirect('home')
+        return redirect('connexion')
 
 def liste_fiches_de_paie_salarie(request):
     # Récupérer le compte de l'utilisateur connecté
@@ -170,10 +170,10 @@ def liste_fiches_de_paie_salarie(request):
             return render(request, 'pages/salarie/actions/liste_fiches_paie_salarie.html', context)
         except Salarie.DoesNotExist:
             messages.error(request, "Aucun salarié associé à ce compte.")
-            return redirect('home')
+            return redirect('connexion')
     else:
         messages.error(request, "Vous n'avez pas accès à cette page.")
-        return redirect('home')
+        return redirect('connexion')
 
 
 #Fonction pour retourner la vue vers la page d'accueil
@@ -211,10 +211,10 @@ def home_partenaire(request):
             return render(request, 'pages/partenaire/compte/home.html', context)
         except Partenaire.DoesNotExist:
             messages.error(request, "Aucun partenaire associé à ce compte.")
-            return redirect('home')
+            return redirect('connexion')
     else:
         messages.error(request, "Vous n'avez pas accès à ce tableau de bord.")
-        return redirect('home')
+        return redirect('connexion')
     
 def liste_salaries_contrats_partenaire(request):
     # Récupérer le compte de l'utilisateur connecté
@@ -249,10 +249,10 @@ def liste_salaries_contrats_partenaire(request):
             return render(request, 'pages/entreprise/liste_salaries_contrats_en_cours.html', context)
         except Partenaire.DoesNotExist:
             messages.error(request, "Aucun partenaire associé à ce compte.")
-            return redirect('home')
+            return redirect('connexion')
     else:
         messages.error(request, "Vous n'avez pas accès à cette page.")
-        return redirect('home')
+        return redirect('connexion')
 
 def liste_fiches_de_paie_partenaire(request):
     compte = request.user
@@ -284,10 +284,10 @@ def liste_fiches_de_paie_partenaire(request):
             return render(request, 'pages/entreprise/liste_fiches_paie.html', context)
         except Partenaire.DoesNotExist:
             messages.error(request, "Aucun partenaire associé à ce compte.")
-            return redirect('home')
+            return redirect('connexion')
     else:
         messages.error(request, "Vous n'avez pas accès à cette page.")
-        return redirect('home')
+        return redirect('connexion')
 
 #Fonction pour retourner la vue vers la page d'accueil
 def home_client(request):
@@ -324,75 +324,68 @@ def home_client(request):
             return render(request, 'pages/client/compte/home.html', context)
         except Client.DoesNotExist:
             messages.error(request, "Aucun client associé à ce compte.")
-            return redirect('home')
+            return redirect('connexion')
     else:
         messages.error(request, "Vous n'avez pas accès à ce tableau de bord.")
-        return redirect('home')
+        return redirect('connexion')
 
 def liste_salaries_contrats_client(request):
-    # Récupérer le compte de l'utilisateur connecté
-    compte = request.user
+    user = request.user
 
     # Vérifier si le compte est bloqué
-    if not compte.is_active:
-        messages.error(request, "Votre compte est bloqué. Veuillez contacter l'administrateur.")
-        return redirect('connexion')  # Redirection vers la page de connexion ou une autre page appropriée
-
-    # Vérifier le rôle pour s'assurer que c'est un client
-    if compte.role.acce_page == 'CL':  # Si c'est un client
-        try:
-            client = Client.objects.get(compte=compte)
-
-            # Récupérer la liste des salariés avec des contrats en cours via des affectations
-            client_salaries = Salarie.objects.filter(
-                contrat__affectation__client=client
-            ).distinct()
-
-            context = {
-                'client_salaries': client_salaries,
-            }
-
-            return render(request, 'pages/client/liste_salaries_contrats_en_cours.html', context)
-        except Client.DoesNotExist:
-            messages.error(request, "Aucun client associé à ce compte.")
-            return redirect('home')
-    else:
-        messages.error(request, "Vous n'avez pas accès à cette page.")
-        return redirect('home')
-
-def liste_fiches_de_paie_client(request):
-    compte = request.user
-
-    if not compte.is_active:
+    if not user.is_active:
         messages.error(request, "Votre compte est bloqué. Veuillez contacter l'administrateur.")
         return redirect('connexion')
 
-    if compte.role.acce_page == 'CL':
-        try:
-            client = Client.objects.get(compte=compte)
-            
-            fiches_paie_payees = FicheDePaieAffectation.objects.filter(
-                affectation__client=client,
-                est_payer=True
-            ).select_related('affectation__contrat', 'affectation__contrat__salarie')
-
-            fiches_paie_impayees = FicheDePaieAffectation.objects.filter(
-                affectation__client=client,
-                est_payer=False
-            ).select_related('affectation__contrat', 'affectation__contrat__salarie')
-
-            context = {
-                'fiches_paie_payees': fiches_paie_payees,
-                'fiches_paie_impayees': fiches_paie_impayees,
-            }
-
-            return render(request, 'pages/client/liste_fiches_paie.html', context)
-        except Client.DoesNotExist:
-            messages.error(request, "Aucun client associé à ce compte.")
-            return redirect('home')
+    # Filtrer les contrats basés sur le rôle de l'utilisateur
+    if user.role.acce_page == 'CL':  # Pour les clients
+        contrats = Contrat.objects.filter(
+            Q(creer_par=user) |
+            Q(affectation__client__compte=user)
+        )
+    elif user.role.acce_page == 'EN':  # Pour les partenaires
+        contrats = Contrat.objects.filter(
+            Q(affectation__entreprise_partenaire__compte=user)
+        )
+    elif user.role.acce_page == 'SA':  # Pour les salariés
+        contrats = Contrat.objects.filter(salarie__compte=user)
     else:
-        messages.error(request, "Vous n'avez pas accès à cette page.")
-        return redirect('home')
+        contrats = Contrat.objects.none()
+
+    context = {
+        'contrats': contrats
+    }
+
+    return render(request, 'pages/client/actions/liste_salaries_contrats_client.html', context)
+    
+
+def liste_fiches_de_paie_client(request):
+    user = request.user
+
+    # Vérifier si le compte est bloqué
+    if not user.is_active:
+        messages.error(request, "Votre compte est bloqué. Veuillez contacter l'administrateur.")
+        return redirect('connexion')
+
+    # Filtrer les fiches de paie basées sur le rôle de l'utilisateur
+    if user.role.acce_page == 'CL':  # Pour les clients
+        fiches_paie = FicheDePaieAffectation.objects.filter(
+            affectation__client__compte=user
+        )
+    elif user.role.acce_page == 'EN':  # Pour les partenaires
+        fiches_paie = FicheDePaieAffectation.objects.filter(
+            affectation__entreprise_partenaire__compte=user
+        )
+    elif user.role.acce_page == 'SA':  # Pour les salariés
+        fiches_paie = FicheDePaieSalarie.objects.filter(salarie__compte=user)
+    else:
+        fiches_paie = FicheDePaieSalarie.objects.none()
+
+    context = {
+        'fiches_paie': fiches_paie
+    }
+    return render(request, 'pages/client/actions/liste_fiches_de_paie_client.html', context)
+
 
 # Vue permettant de générer automatiquement les noms d'utilisateur
 def generer_nom_utilisateur(length=12):
@@ -468,6 +461,7 @@ def connexion(request):
             return redirect('connexion')
     else:
         return render(request, "pages/auth/login.html")
+
 #Fonction de déconnexion
 def deconnexion(request):
     # Supprimez la session de l'utilisateur
@@ -1187,12 +1181,12 @@ def liste_salaries(request):
         # Récupérer tous les clients, entreprises et salariés
         clients = Client.objects.select_related('compte', 'entreprise_affilier').all()
         entreprises = Entreprise.objects.all()
-        salaries = Salarie.objects.select_related('compte', 'department_assigner', 'department_assigner__entreprise').all()
+        salaries = Salarie.objects.select_related('compte', 'department_assigner', 'department_assigner__entreprise').prefetch_related('competence_set').all()
     else:
         # Filtrer les clients, entreprises et salariés par l'utilisateur qui les a créés
         clients = Client.objects.filter(creer_par=request.user).select_related('compte', 'entreprise_affilier')
         entreprises = Entreprise.objects.filter(creer_par=request.user)
-        salaries = Salarie.objects.filter(creer_par=request.user).select_related('compte', 'department_assigner', 'department_assigner__entreprise')
+        salaries = Salarie.objects.filter(creer_par=request.user).select_related('compte', 'department_assigner', 'department_assigner__entreprise').prefetch_related('competence_set')
 
     context = {
         'clients': clients,
@@ -1814,13 +1808,14 @@ def liste_clients(request):
 #Fonction vers la vue du profile du client
 def profile_client(request):
     user_id = request.session.get('user_id')
+    
     if not user_id:
         messages.error(request, "Vous devez être connecté pour accéder à cette page.")
         return redirect('connexion')
 
     user = get_object_or_404(Compte, id=user_id)
 
-    if not hasattr(user, 'role') or user.role.acce_page != 'CL':
+    if not hasattr(user, 'role') or user.role.acce_page != "CL":
         messages.error(request, "Vous n'avez pas les droits d'accès à cette page.")
         return redirect('home_client')
 
@@ -2707,7 +2702,7 @@ def demande_client(request):
 
 def mes_demandes_client(request):
     # Vérifier que l'utilisateur est connecté
-    if not request.user.is_authenticated:
+    if not hasattr(request.user, 'id'):
         messages.error(request, "Vous devez être connecté pour accéder à cette page.")
         return redirect('connexion')
 
@@ -2715,7 +2710,7 @@ def mes_demandes_client(request):
     demandes = Demande.objects.filter(compte=request.user).order_by('-fait_le')
 
     context = {
-        'demandes': demandes,
+        'demandes': demandes
     }
     return render(request, 'pages/client/actions/mes_demandes.html', context)
 
@@ -2744,6 +2739,8 @@ def demande_partenaire(request):
             compte=request.user,
             titre=titre,
             details=details,
+            fait_le=timezone.now(),
+            statut='EN_ATTENTE'  # Statut par défaut
         )
 
         messages.success(request, "Demande effectuer avec succès.")
@@ -2753,22 +2750,22 @@ def demande_partenaire(request):
 
 def mes_demandes_partenaire(request):
     # Vérifier que l'utilisateur est connecté
-    if not request.user.is_authenticated:
+    if not hasattr(request.user, 'id'):
         messages.error(request, "Vous devez être connecté pour accéder à cette page.")
         return redirect('connexion')
-
+    
     # Récupérer les demandes créées par l'utilisateur connecté
     demandes = Demande.objects.filter(compte=request.user).order_by('-fait_le')
 
     context = {
-        'demandes': demandes,
+        'demandes': demandes
     }
     return render(request, 'pages/partenaire/actions/mes_demandes.html', context)
 
 #Fonction pour afficher liste demande salarié en attente
 def liste_demandes(request):
     if request.user.role.acce_page in ['AD', 'GE']:  # Exemples de rôles autorisés
-        demandes = Demande.objects.All().order_by('-fait_le')
+        demandes = Demande.objects.all().order_by('-fait_le')
     else:
         messages.error(request, "Vous n'avez pas la permission d'accéder à cette page.")
         return redirect('home_admin')

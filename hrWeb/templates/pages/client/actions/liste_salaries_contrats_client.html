@@ -1,4 +1,4 @@
-{% extends 'layouts/basedashboardsalarie.html' %}
+{% extends 'layouts/basedashboardclient.html' %}
 {% block content %}
 {% load static %}
 {% block sidebar %}
@@ -11,7 +11,7 @@
                     <span class="hide-menu">Accueil</span>
                 </li>
                 <li class="active">
-                    <a href="{% url 'home_partenaire' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                    <a href="{% url 'home_client' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
                 </li>
                 <li class="nav-small-cap">
                     <span class="hide-menu">Documents</span>
@@ -19,20 +19,24 @@
                 <li class="submenu">
                     <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
                     <ul>
-                        <li><a href="{% url 'demande_salarie' %}">Faire une demande</a></li>
-                        <li><a href="{% url 'mes_demandes' %}">Mes demandes</a></li>
+                        <li><a href="{% url 'demande_client' %}">Faire une demande</a></li>
+                        <a href="{% url 'mes_demandes_client' %}">
+                            <span>  Mes demandes</span>
+                            <span class="badge badge-warning">{{ user_demandes_en_attente }}</span>
+                            <span class="badge badge-success">{{ user_demandes_validees }}</span>
+                        </a>
                     </ul>
                 </li>
                 <li class="submenu">
                     <a href="javascript:void(0);"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
                     <ul>
-                        <li><a href="{% url 'liste_contrats_salarie' %}" class="active">En cours et Terminer</a></li>
+                        <li><a href="{% url 'liste_salaries_contrats_client' %}" class="active">En cours et Terminer</a></li>
                     </ul>
                 </li>
                 <li class="submenu">
                     <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
                     <ul>
-                        <li><a href="{% url 'liste_fiches_de_paie_salarie' %}">Payées et Impayées</a></li>
+                        <li><a href="{% url 'liste_fiches_de_paie_client' %}">Payées et Impayées</a></li>
                     </ul>
                 </li>
             </ul>
@@ -74,58 +78,29 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table  datanew">
+                    <table class="table datanew">
                         <thead>
                             <tr>
-                                <th>Identifiant Contrat</th>
+                                <th>Identifiant du contrat</th>
                                 <th>Salarié</th>
+                                <th>Document</th>
+                                <th>Date de création</th>
                                 <th>Statut</th>
-                                <th>Options</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for client_salarie in client_salaries %}
+                            {% for contrat in contrats %}
                             <tr>
-                                <td>{{ client_salarie.affectation.contrat.nom_identifiant_contrat }}</td>
-                                <td>{{ client_salarie.affectation.contrat.salarie.nom_salarie }} {{ client_salarie.affectation.contrat.salarie.prenom_salarie }}</td>
+                                <td>{{ contrat.nom_identifiant_contrat }}</td>
+                                <td>{{ contrat.salarie.nom_salarie }} {{ contrat.salarie.prenom_salarie }}</td>
+                                <td><a href="{{ contrat.enregistrerpdf_set.first.file.url }}" download>Télécharger</a></td>
+                                <td>{{ contrat.fait_le }}</td>
                                 <td>
-                                    {% if not client_salarie.affectation.contrat.est_terminer %}
+                                    {% if not contrat.est_terminer %}
                                         <span class="bg-lightgreen badges">En cours</span>
                                     {% else %}
                                         <span class="bg-lightred badges">Terminer</span>
                                     {% endif %}
-                                </td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Options
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#detailcontrat{{ affectation.id }}">Voir détail</a>
-                                        </div>
-                                    </div>
-                                    <!-- The Modal -->
-                                    <div class="modal fade" id="detailAffectation{{ affectation.id }}">
-                                        <div class="modal-dialog modal-dialog-centered modal-lg">
-                                            <div class="modal-content">
-                                                <!-- Modal Header -->
-                                                <div class="modal-header">
-                                                    <h3 class="modal-title">Détails du sur le contrat {{ client_salarie.affectation.contrat.nom_identifiant_contrat }}</h3>
-                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                </div>
-                                                <!-- Modal body -->
-                                                <div class="modal-body">
-                                                    <p><strong>Identifiant Contrat:</strong> {{ client_salarie.affectation.contrat.nom_identifiant_contrat }} </p>
-                                                    <p><strong>Type de Contrat:</strong>  {{ client_salarie.affectation.contrat.type_contrat }} </p>
-                                                    <p><strong>Date de Début:</strong> {{ client_salarie.affectation.contrat.date_debut }} </p>
-                                                    <p><strong>Date de Fin:</strong> {{ client_salarie.affectation.contrat.date_fin }}  </p>
-                                                    <p><strong>Salarie:</strong> {{ client_salarie.affectation.contrat.salarie.nom_salarie}} {{ client_salarie.affectation.contrat.salarie.prenom_salarie}}  </p>
-                                                    <p><strong>Fonction du salarié:</strong> {{ client_salarie.affectation.contrat.fonction_salarie }}  </p>
-                                                    <p><strong>Détail:</strong> {{ client_salarie.affectation.contrat.detail }}  </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}

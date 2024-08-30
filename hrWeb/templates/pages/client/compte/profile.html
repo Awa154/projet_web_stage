@@ -11,7 +11,7 @@
                     <span class="hide-menu">Accueil</span>
                 </li>
                 <li class="active">
-                    <a href="{% url 'home_partenaire' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
+                    <a href="{% url 'home_client' %}"><img src="{% static 'assets/img/icons/dashboard.svg' %}" alt="img"><span> Tableau de bord</span> </a>
                 </li>
                 <li class="nav-small-cap">
                     <span class="hide-menu">Documents</span>
@@ -20,19 +20,25 @@
                     <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/time.svg'  %}" alt="img"><span> Demandes</span> <span class="menu-arrow"></span></a>
                     <ul>
                         <li><a href="{% url 'demande_client' %}">Faire une demande</a></li>
-                        <li><a href="{% url 'mes_demandes_client' %}">Mes demandes</a></li>
+                        <li>
+                            <a href="{% url 'mes_demandes_client' %}">
+                                <span>  Mes demandes</span>
+                                <span class="badge badge-warning">{{ user_demandes_en_attente }}</span>
+                                <span class="badge badge-success">{{ user_demandes_validees }}</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="submenu">
                     <a href="javascript:void(0);"><i data-feather="file-text"></i><span> Contrats</span> <span class="menu-arrow"></span></a>
                     <ul>
-                        <li><a href="{% url 'liste_contrats_salarie' %}">En cours et Terminer</a></li>
+                        <li><a href="{% url 'liste_salaries_contrats_client' %}">En cours et Terminer</a></li>
                     </ul>
                 </li>
                 <li class="submenu">
                     <a href="javascript:void(0);"><img src="{% static 'assets/img/icons/purchase1.svg' %}" alt="img"><span> Fiches de paie</span> <span class="menu-arrow"></span></a>
                     <ul>
-                        <li><a href="{% url 'liste_fiches_de_paie_salarie' %}">Payées et Impayées</a></li>
+                        <li><a href="{% url 'liste_fiches_de_paie_client' %}">Payées et Impayées</a></li>
                     </ul>
                 </li>
             </ul>
@@ -60,7 +66,7 @@
                 <h6>Profil Client</h6>
             </div>
         </div>
-        <form action="{% url 'profile_entreprise' %}" method="POST">
+        <form action="{% url 'profile_client' %}" method="POST">
             {% csrf_token %}
             <div class="card">
                 <div class="card-body">
@@ -106,7 +112,6 @@
                         <div class="form-group">
                             <label for="adresse">Adresse:</label>
                             <input type="text" id="adresse" name="adresse" value="{{ user.adresse }}">
-                            </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-12">
@@ -117,7 +122,7 @@
                     </div>
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
-                        <a href="{% url 'home_entreprise' %}" class="btn btn-cancel">Annuler</a>
+                        <a href="{% url 'home_client' %}" class="btn btn-danger">Annuler</a>
                     </div>
                 </div>
             </div>
